@@ -6,9 +6,10 @@ Use native android (work thorugh this https://developer.android.com/training/ind
 - View/save video
 - Compute on video
 - Run tensor flow model
-- Comunicate with bluetooth
+- Comunicate with bluetooth https://developer.android.com/guide/topics/connectivity/bluetooth.html#TheBasics
 - Store data
 - Communicate with web (private APIs)
 - Browse stored files
 
 Good resource for final cloud based data processing - https://www.coursera.org/specializations/gcp-data-machine-learning
+
