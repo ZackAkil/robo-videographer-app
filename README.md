@@ -13,3 +13,4 @@ Use native android (work thorugh this https://developer.android.com/training/ind
 
 Good resource for final cloud based data processing - https://www.coursera.org/specializations/gcp-data-machine-learning
 
+https://developer.android.com/guide/components/activities/activity-lifecycle.html
