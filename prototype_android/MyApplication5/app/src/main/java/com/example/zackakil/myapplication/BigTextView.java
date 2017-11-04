@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.SeekBar;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -51,6 +52,25 @@ public class BigTextView extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_big_text_view);
+
+
+        SeekBar seekBar = (SeekBar) findViewById(R.id.seekBar);
+        seekBar.setOnSeekBarChangeListener(
+                new SeekBar.OnSeekBarChangeListener() {
+
+                    @Override
+                    public void onProgressChanged(SeekBar seekBar,
+                                                  int progresValue, boolean fromUser) {
+
+                        sendDownBluetooth((char) progresValue);
+                    }
+
+                    @Override
+                    public void onStartTrackingTouch(SeekBar seekBar) {}
+
+                    @Override
+                    public void onStopTrackingTouch(SeekBar seekBar) {}
+                });
 
 
         BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -96,20 +116,33 @@ public class BigTextView extends AppCompatActivity {
         String message = editText.getText().toString();
         Log.d("My App", message );
 
+        sendDownBluetooth(message.getBytes());
+    }
+
+
+
+    private void sendDownBluetooth(char bytes){
+
+        sendDownBluetooth( String.valueOf(bytes).getBytes() );
+    }
+
+    private void sendDownBluetooth(byte[] bytes){
+
         if (soc.isConnected()){
 
             try {
                 OutputStream stream = soc.getOutputStream();
 
-                stream.write(message.getBytes());
+                stream.write(bytes);
 
             }catch (IOException e){
                 Toast.makeText(getBaseContext(), "IO exception!", Toast.LENGTH_SHORT).show();
             }
-            
+
         }else{
             Toast.makeText(getBaseContext(), "Not connected", Toast.LENGTH_SHORT).show();
         }
 
     }
+
 }
