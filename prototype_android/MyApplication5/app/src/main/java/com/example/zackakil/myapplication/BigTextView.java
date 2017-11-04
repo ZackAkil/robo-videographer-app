@@ -7,9 +7,13 @@ import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.util.Set;
 import java.util.UUID;
@@ -36,7 +40,6 @@ public class BigTextView extends AppCompatActivity {
 
 
         try{
-
             soc.close();
 
         } catch (IOException e) {
@@ -81,5 +84,32 @@ public class BigTextView extends AppCompatActivity {
             }
 
         }
+    }
+
+
+
+    public void sendStuffOnBluetooh(View view){
+        /**
+         * Send somethiing to arduino using bluetooth
+         */
+        EditText editText = (EditText) findViewById(R.id.bthEditText);
+        String message = editText.getText().toString();
+        Log.d("My App", message );
+
+        if (soc.isConnected()){
+
+            try {
+                OutputStream stream = soc.getOutputStream();
+
+                stream.write(message.getBytes());
+
+            }catch (IOException e){
+                Toast.makeText(getBaseContext(), "IO exception!", Toast.LENGTH_SHORT).show();
+            }
+            
+        }else{
+            Toast.makeText(getBaseContext(), "Not connected", Toast.LENGTH_SHORT).show();
+        }
+
     }
 }
