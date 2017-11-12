@@ -12,6 +12,8 @@ import android.hardware.camera2.CameraDevice;
 import android.hardware.camera2.CameraManager;
 import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.params.StreamConfigurationMap;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -98,6 +100,8 @@ public class VideoActivity extends AppCompatActivity {
                 }
             };
 
+    private HandlerThread mHandelerThread;
+    private Handler mHandler;
 
 
     @Override
@@ -109,8 +113,11 @@ public class VideoActivity extends AppCompatActivity {
 
     @Override
     public void onPause(){
+        closeCamera();
+
+        closeBackgroundThread();
+
         super.onPause();
-        mCameraDevice.close();
     }
 
 
@@ -118,8 +125,10 @@ public class VideoActivity extends AppCompatActivity {
     public void onResume(){
         super.onResume();
 
-        if(nTextureView.isAvailable()){
+        openBackgroundThread();
 
+        if(nTextureView.isAvailable()){
+            setupCamera(nTextureView.getWidth(), nTextureView.getHeight());
         }else{
             nTextureView.setSurfaceTextureListener(mSurfaceTextureListener);
         }
@@ -161,7 +170,7 @@ public class VideoActivity extends AppCompatActivity {
 
         CameraManager cm = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
         try {
-            cm.openCamera(mCameraId, mCameraDeviceStateCallback, null);
+            cm.openCamera(mCameraId, mCameraDeviceStateCallback, mHandler);
 
         }catch(SecurityException ex){
 
@@ -171,6 +180,18 @@ public class VideoActivity extends AppCompatActivity {
             Toast.makeText(getBaseContext(), "Camera exception", Toast.LENGTH_SHORT).show();
         }
 
+    }
+
+    private void closeCamera(){
+
+        if (mCameraCaptureSession != null){
+            mCameraCaptureSession.close();
+            mCameraCaptureSession = null;
+        }
+        if(mCameraDevice != null) {
+            mCameraDevice.close();
+            mCameraDevice = null;
+        }
     }
 
     private void createCameraPreviewSession(){
@@ -197,7 +218,7 @@ public class VideoActivity extends AppCompatActivity {
                                 mCameraCaptureSession.setRepeatingRequest(
                                         mPreviewCaptureRequest,
                                         mSessionCaptureCallback,
-                                        null
+                                        mHandler
                                 );
 
                             }catch (CameraAccessException ex){
@@ -251,5 +272,22 @@ public class VideoActivity extends AppCompatActivity {
         }
         return mapSizes[0];
 
+    }
+
+    private void openBackgroundThread(){
+        mHandelerThread = new HandlerThread("Camera2 backgroud thread");
+        mHandelerThread.start();
+        mHandler = new Handler(mHandelerThread.getLooper());
+    }
+
+    private void closeBackgroundThread(){
+        mHandelerThread.quitSafely();
+        try{
+            mHandelerThread.join();
+            mHandelerThread = null;
+            mHandler = null;
+        }catch(InterruptedException ex){
+            ex.printStackTrace();
+        }
     }
 }
