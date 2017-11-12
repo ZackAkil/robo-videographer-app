@@ -1,5 +1,17 @@
-# robo-videographer-app
+# Robo videographer app
 Version 2 of rugby recording robot built into a mobile app with better machine learning.
+
+## Plan
+
+- [x] Connect bluetooth android to arduino
+- [x] Control arduino servo with android
+- [x] Access camera
+- [x] Display camera preview
+- [ ] Access individual frame of camera
+- [ ] Access some pixel value from individual frame from camera
+- [ ] Run simple TensorFlow model
+- [ ] Pass image to simple TensorFlow model
+- [ ] Control arduino with output from tensorflow model
 
 ## Notes
 Use native android (work thorugh this https://developer.android.com/training/index.html)
