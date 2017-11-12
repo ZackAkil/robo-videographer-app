@@ -104,10 +104,13 @@ public class VideoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video);
-
-
         nTextureView = (TextureView) findViewById(R.id.textureView);
+    }
 
+    @Override
+    public void onPause(){
+        super.onPause();
+        mCameraDevice.close();
     }
 
 
