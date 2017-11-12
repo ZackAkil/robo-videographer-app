@@ -28,3 +28,5 @@ Good resource for final cloud based data processing - https://www.coursera.org/s
 Actviity lifecycle - https://developer.android.com/guide/components/activities/activity-lifecycle.html
 
 bluetooth example - https://github.com/bauerjj/Android-Simple-Bluetooth-Example/blob/master/app/src/main/java/com/mcuhq/simplebluetooth/MainActivity.java
+
+using camera on android - https://www.youtube.com/playlist?list=PL9jCwTXYWjDJUJATHM0Lrjk9N5n6QZqBg
