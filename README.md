@@ -32,3 +32,5 @@ bluetooth example - https://github.com/bauerjj/Android-Simple-Bluetooth-Example/
 using camera on android - https://www.youtube.com/playlist?list=PL9jCwTXYWjDJUJATHM0Lrjk9N5n6QZqBg
 
 using tf with android camera - https://github.com/tensorflow/tensorflow/blob/master/tensorflow/examples/android/src/org/tensorflow/demo/DetectorActivity.java
+
+anroid camera ref - https://developer.android.com/reference/android/hardware/camera2/package-summary.html
