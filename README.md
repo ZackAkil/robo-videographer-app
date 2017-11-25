@@ -34,3 +34,5 @@ using camera on android - https://www.youtube.com/playlist?list=PL9jCwTXYWjDJUJA
 using tf with android camera - https://github.com/tensorflow/tensorflow/blob/master/tensorflow/examples/android/src/org/tensorflow/demo/DetectorActivity.java
 
 anroid camera ref - https://developer.android.com/reference/android/hardware/camera2/package-summary.html
+
+get rgb from camera - https://stackoverflow.com/questions/15918180/get-rgb-from-a-surfaceview-displaying-live-camera
