@@ -38,7 +38,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
+
 
 public class VideoActivity extends AppCompatActivity {
 
@@ -121,7 +121,22 @@ public class VideoActivity extends AppCompatActivity {
                     Image image = null;
                     try {
                         image = imageReader.acquireLatestImage();
-                        ByteBuffer buffer = image.getPlanes()[0].getBuffer();
+                        if(image == null){
+                            return;
+                        }
+                        if (image.getPlanes()[0].getBuffer() == null) {
+                            return;
+                        }
+//                        ByteBuffer buffer = image.getPlanes()[0].getBuffer();
+//                        byte[] pixels = buffer.array();
+//                        Log.d("My App", "sum ="+ buffer.toString());
+
+                        Log.d("My App", "new counts");
+                        Log.d("My App", "sum ="+ getAverageFromBuffer(image.getPlanes()[0].getBuffer()));
+                        Log.d("My App", "sum ="+ getAverageFromBuffer(image.getPlanes()[1].getBuffer()));
+                        Log.d("My App", "sum ="+ getAverageFromBuffer(image.getPlanes()[2].getBuffer()));
+
+
                         // use byte buffer for processing
                     } finally {
                         if (image != null) {
@@ -135,11 +150,25 @@ public class VideoActivity extends AppCompatActivity {
                 }
             };
 
+    private int getAverageFromBuffer(ByteBuffer buffer){
+            int sum  = 0;
+            int count = buffer.remaining();
+            Log.d("My App", "size: "+ count);
+            while (buffer.hasRemaining()){
+                sum +=  buffer.get();
+            }
+
+            int avg = sum/count;
+        return avg;
+    }
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video);
         nTextureView = (TextureView) findViewById(R.id.textureView);
+
+        TextureView colorPick = (TextureView) findViewById(R.id.textureViewColor);
     }
 
     @Override
@@ -185,8 +214,8 @@ public class VideoActivity extends AppCompatActivity {
                 mCameraId = id;
 
 
-                mImageReader = ImageReader.newInstance(mPreviewSize.getWidth(), mPreviewSize.getHeight(), ImageFormat.JPEG, 10);
-                mImageReader.setOnImageAvailableListener(mImageReaderCallback, null);
+                mImageReader = ImageReader.newInstance(mPreviewSize.getWidth(), mPreviewSize.getHeight(), ImageFormat.YUV_420_888, 2);
+                mImageReader.setOnImageAvailableListener(mImageReaderCallback, mHandler);
 
                 return;
             }
@@ -198,6 +227,7 @@ public class VideoActivity extends AppCompatActivity {
             Toast.makeText(getBaseContext(), "Camera exception", Toast.LENGTH_SHORT).show();
         }
     }
+
 
     private void openCamera(){
 
@@ -296,13 +326,13 @@ public class VideoActivity extends AppCompatActivity {
 
         for(Size option : mapSizes){
             if(width > hieght){
-                if(option.getWidth() > width &&
-                        option.getHeight() > hieght){
+                if(option.getWidth() < width &&
+                        option.getHeight() < hieght){
                     collectoreSizes.add(option);
                 }
             }else{
-                if(option.getWidth() > hieght &&
-                        option.getHeight() > width){
+                if(option.getWidth() < hieght &&
+                        option.getHeight() < width){
                     collectoreSizes.add(option);
                 }
             }
