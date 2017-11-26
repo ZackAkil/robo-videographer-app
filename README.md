@@ -36,3 +36,5 @@ using tf with android camera - https://github.com/tensorflow/tensorflow/blob/mas
 anroid camera ref - https://developer.android.com/reference/android/hardware/camera2/package-summary.html
 
 get rgb from camera - https://stackoverflow.com/questions/15918180/get-rgb-from-a-surfaceview-displaying-live-camera
+
+seems the key to getting images is using image reader - https://developer.android.com/reference/android/media/ImageReader.html
