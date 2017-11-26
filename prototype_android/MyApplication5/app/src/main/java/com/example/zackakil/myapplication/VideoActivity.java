@@ -3,8 +3,11 @@ package com.example.zackakil.myapplication;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Camera;
+import android.graphics.ImageFormat;
 import android.graphics.SurfaceTexture;
+import android.graphics.Bitmap.Config;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CameraCharacteristics;
@@ -12,6 +15,8 @@ import android.hardware.camera2.CameraDevice;
 import android.hardware.camera2.CameraManager;
 import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.params.StreamConfigurationMap;
+import android.media.Image;
+import android.media.ImageReader;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.annotation.IntDef;
@@ -27,6 +32,7 @@ import android.view.TextureView;
 import android.widget.Toast;
 
 import java.lang.reflect.Array;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -103,8 +109,33 @@ public class VideoActivity extends AppCompatActivity {
     private HandlerThread mHandelerThread;
     private Handler mHandler;
 
+    private Bitmap rgbFrameBitmap = null;
 
-    @Override
+    private ImageReader mImageReader;
+
+    private ImageReader.OnImageAvailableListener mImageReaderCallback =
+            new ImageReader.OnImageAvailableListener() {
+                @Override
+                public void onImageAvailable(ImageReader imageReader) {
+
+                    Image image = null;
+                    try {
+                        image = imageReader.acquireLatestImage();
+                        ByteBuffer buffer = image.getPlanes()[0].getBuffer();
+                        // use byte buffer for processing
+                    } finally {
+                        if (image != null) {
+                            image.close();
+                        }
+                        // make sure to close image
+                    }
+
+//                    Log.d("My App", "shit the bed! iv'e got a new image");
+
+                }
+            };
+
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video);
@@ -152,8 +183,16 @@ public class VideoActivity extends AppCompatActivity {
                 StreamConfigurationMap map = camCars.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
                 mPreviewSize = getPreferedPreviewSize(map.getOutputSizes(SurfaceTexture.class), height, width);
                 mCameraId = id;
+
+
+                mImageReader = ImageReader.newInstance(mPreviewSize.getWidth(), mPreviewSize.getHeight(), ImageFormat.JPEG, 10);
+                mImageReader.setOnImageAvailableListener(mImageReaderCallback, null);
+
                 return;
             }
+
+
+            rgbFrameBitmap = Bitmap.createBitmap(mPreviewSize.getWidth(), mPreviewSize.getHeight(), Config.ARGB_8888);
 
         }catch(CameraAccessException ex){
             Toast.makeText(getBaseContext(), "Camera exception", Toast.LENGTH_SHORT).show();
@@ -204,7 +243,9 @@ public class VideoActivity extends AppCompatActivity {
 
             mPreviewCaptureRequestBuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW);
             mPreviewCaptureRequestBuilder.addTarget(previewSurface);
-            mCameraDevice.createCaptureSession(Arrays.asList(previewSurface),
+            mPreviewCaptureRequestBuilder.addTarget(mImageReader.getSurface());
+
+            mCameraDevice.createCaptureSession(Arrays.asList(previewSurface, mImageReader.getSurface()),
                     new CameraCaptureSession.StateCallback(){
 
                         @Override
@@ -216,10 +257,10 @@ public class VideoActivity extends AppCompatActivity {
                                 mPreviewCaptureRequest = mPreviewCaptureRequestBuilder.build();
                                 mCameraCaptureSession = session;
                                 mCameraCaptureSession.setRepeatingRequest(
-                                        mPreviewCaptureRequest,
-                                        mSessionCaptureCallback,
-                                        mHandler
-                                );
+                                                                            mPreviewCaptureRequest,
+                                                                            mSessionCaptureCallback,
+                                                                            mHandler
+                                                                         );
 
                             }catch (CameraAccessException ex){
                                 ex.printStackTrace();
@@ -231,6 +272,12 @@ public class VideoActivity extends AppCompatActivity {
                         @Override
                         public void onConfigureFailed(CameraCaptureSession var1){
                             Toast.makeText(getBaseContext(), "Camera configed wrong",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onActive(CameraCaptureSession var1){
+                            Toast.makeText(getBaseContext(), "Camera started processing",
                                     Toast.LENGTH_SHORT).show();
                         }
 
@@ -288,6 +335,46 @@ public class VideoActivity extends AppCompatActivity {
             mHandler = null;
         }catch(InterruptedException ex){
             ex.printStackTrace();
+        }
+    }
+
+
+    //  Byte decoder : ---------------------------------------------------------------------
+    void decodeYUV420SP(int[] rgb, byte[] yuv420sp, int width, int height) {
+        // Pulled directly from:
+        // http://ketai.googlecode.com/svn/trunk/ketai/src/edu/uic/ketai/inputService/KetaiCamera.java
+        final int frameSize = width * height;
+
+        for (int j = 0, yp = 0; j < height; j++) {       int uvp = frameSize + (j >> 1) * width, u = 0, v = 0;
+            for (int i = 0; i < width; i++, yp++) {
+                int y = (0xff & ((int) yuv420sp[yp])) - 16;
+                if (y < 0)
+                    y = 0;
+                if ((i & 1) == 0) {
+                    v = (0xff & yuv420sp[uvp++]) - 128;
+                    u = (0xff & yuv420sp[uvp++]) - 128;
+                }
+
+                int y1192 = 1192 * y;
+                int r = (y1192 + 1634 * v);
+                int g = (y1192 - 833 * v - 400 * u);
+                int b = (y1192 + 2066 * u);
+
+                if (r < 0)
+                    r = 0;
+                else if (r > 262143)
+                    r = 262143;
+                if (g < 0)
+                    g = 0;
+                else if (g > 262143)
+                    g = 262143;
+                if (b < 0)
+                    b = 0;
+                else if (b > 262143)
+                    b = 262143;
+
+                rgb[yp] = 0xff000000 | ((r << 6) & 0xff0000) | ((g >> 2) & 0xff00) | ((b >> 10) & 0xff);
+            }
         }
     }
 }
