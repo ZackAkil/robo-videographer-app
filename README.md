@@ -38,3 +38,10 @@ anroid camera ref - https://developer.android.com/reference/android/hardware/cam
 get rgb from camera - https://stackoverflow.com/questions/15918180/get-rgb-from-a-surfaceview-displaying-live-camera
 
 seems the key to getting images is using image reader - https://developer.android.com/reference/android/media/ImageReader.html
+
+---
+these held the key to using image reader - 
+- https://stackoverflow.com/questions/28440599/camera-previewcallback-equivalent-in-camera2-api
+
+- https://stackoverflow.com/questions/32516539/android-camera2-bad-argument-passed-to-camera-service
+---
