@@ -19,9 +19,11 @@ import android.media.Image;
 import android.media.ImageReader;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.os.Message;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -29,6 +31,7 @@ import android.util.Log;
 import android.util.Size;
 import android.view.Surface;
 import android.view.TextureView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.lang.reflect.Array;
@@ -113,6 +116,11 @@ public class VideoActivity extends AppCompatActivity {
 
     private ImageReader mImageReader;
 
+    private TextView mYDisplay;
+    private TextView mUDisplay;
+    private TextView mVDisplay;
+
+
     private ImageReader.OnImageAvailableListener mImageReaderCallback =
             new ImageReader.OnImageAvailableListener() {
                 @Override
@@ -132,9 +140,27 @@ public class VideoActivity extends AppCompatActivity {
 //                        Log.d("My App", "sum ="+ buffer.toString());
 
                         Log.d("My App", "new counts");
-                        Log.d("My App", "sum ="+ getAverageFromBuffer(image.getPlanes()[0].getBuffer()));
-                        Log.d("My App", "sum ="+ getAverageFromBuffer(image.getPlanes()[1].getBuffer()));
-                        Log.d("My App", "sum ="+ getAverageFromBuffer(image.getPlanes()[2].getBuffer()));
+                        final int avgY = getAverageFromBuffer(image.getPlanes()[0].getBuffer());
+                        Log.d("My App", "sum ="+ avgY);
+
+                        final int avgU = getAverageFromBuffer(image.getPlanes()[1].getBuffer());
+                        Log.d("My App", "sum ="+ avgU);
+
+                        final int avgV = getAverageFromBuffer(image.getPlanes()[2].getBuffer());
+                        Log.d("My App", "sum ="+ avgV);
+
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+
+                        mYDisplay.setText(String.valueOf(avgY));
+                        mUDisplay.setText(String.valueOf(avgU));
+                        mVDisplay.setText(String.valueOf(avgV));
+
+                            }
+                        });
+
 
 
                         // use byte buffer for processing
@@ -152,14 +178,15 @@ public class VideoActivity extends AppCompatActivity {
 
     private int getAverageFromBuffer(ByteBuffer buffer){
             int sum  = 0;
-            int count = buffer.remaining();
+            int count = buffer.remaining() ;
             Log.d("My App", "size: "+ count);
-            while (buffer.hasRemaining()){
-                sum +=  buffer.get();
-            }
-
-            int avg = sum/count;
-        return avg;
+            return buffer.get() & 0xFF;
+//            while (buffer.hasRemaining()){
+//                sum +=  buffer.get();
+//            }
+//
+//            int avg = sum/count;
+//        return avg;
     }
 
 
@@ -168,7 +195,9 @@ public class VideoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_video);
         nTextureView = (TextureView) findViewById(R.id.textureView);
 
-        TextureView colorPick = (TextureView) findViewById(R.id.textureViewColor);
+        mYDisplay = (TextView) findViewById(R.id.textViewY);
+        mUDisplay = (TextView) findViewById(R.id.textViewU);
+        mVDisplay = (TextView) findViewById(R.id.textViewV);
     }
 
     @Override
