@@ -7,8 +7,9 @@ Version 2 of rugby recording robot built into a mobile app with better machine l
 - [x] Control arduino servo with android
 - [x] Access camera
 - [x] Display camera preview
-- [ ] Access individual frame of camera
-- [ ] Access some pixel value from individual frame from camera
+- [x] Access individual frame of camera
+- [x] Access some pixel value from individual frame from camera
+- [ ] Get frame in RGB
 - [ ] Run simple TensorFlow model
 - [ ] Pass image to simple TensorFlow model
 - [ ] Control arduino with output from tensorflow model
@@ -45,5 +46,5 @@ these held the key to using image reader -
 
 - https://stackoverflow.com/questions/32516539/android-camera2-bad-argument-passed-to-camera-service
 ---
-- how to use the image utils 
-https://github.com/tensorflow/tensorflow/blob/15b1cf025da5c6ac2bcf4d4878ee222fca3aec4a/tensorflow/examples/android/src/org/tensorflow/demo/CameraActivity.java
+how to use the image utils 
+- https://github.com/tensorflow/tensorflow/blob/15b1cf025da5c6ac2bcf4d4878ee222fca3aec4a/tensorflow/examples/android/src/org/tensorflow/demo/CameraActivity.java
