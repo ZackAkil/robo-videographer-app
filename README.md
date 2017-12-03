@@ -45,3 +45,5 @@ these held the key to using image reader -
 
 - https://stackoverflow.com/questions/32516539/android-camera2-bad-argument-passed-to-camera-service
 ---
+- how to use the image utils 
+https://github.com/tensorflow/tensorflow/blob/15b1cf025da5c6ac2bcf4d4878ee222fca3aec4a/tensorflow/examples/android/src/org/tensorflow/demo/CameraActivity.java
