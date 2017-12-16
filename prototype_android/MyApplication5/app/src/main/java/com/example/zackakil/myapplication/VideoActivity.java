@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Camera;
+import android.graphics.Color;
 import android.graphics.ImageFormat;
 import android.graphics.SurfaceTexture;
 import android.graphics.Bitmap.Config;
@@ -165,7 +166,10 @@ public class VideoActivity extends AppCompatActivity {
 
                         if (rgbFrameBitmap != null) {
                             rgbFrameBitmap.setPixels(rgbBytes, 0, mPreviewSize.getWidth(), 0, 0, mPreviewSize.getWidth(), mPreviewSize.getHeight());
-                        }
+                            final int r = Color.red(rgbFrameBitmap.getPixel(0, 0));
+                            final int g = Color.green(rgbFrameBitmap.getPixel(0, 0));
+                            final int b = Color.blue(rgbFrameBitmap.getPixel(0, 0));
+
 
 //                        Log.d("My App", "new counts");
 //                        final int avgY = getAverageFromBuffer(image.getPlanes()[0].getBuffer());
@@ -178,17 +182,19 @@ public class VideoActivity extends AppCompatActivity {
 //                        Log.d("My App", "sum ="+ avgV);
 
 
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
 
-//                        mYDisplay.setText(String.valueOf(avgY));
-//                        mUDisplay.setText(String.valueOf(avgU));
-//                        mVDisplay.setText(String.valueOf(avgV));
+                                    mYDisplay.setText(String.valueOf(r));
+                                    mUDisplay.setText(String.valueOf(g));
+                                    mVDisplay.setText(String.valueOf(b));
 
-                            }
-                        });
-
+                                }
+                            });
+                        }else{
+                            rgbFrameBitmap = Bitmap.createBitmap(mPreviewSize.getWidth(), mPreviewSize.getHeight(), Config.ARGB_8888);
+                        }
 
 
                         // use byte buffer for processing
@@ -291,7 +297,7 @@ public class VideoActivity extends AppCompatActivity {
             }
 
 
-            rgbFrameBitmap = Bitmap.createBitmap(mPreviewSize.getWidth(), mPreviewSize.getHeight(), Config.ARGB_8888);
+
 
         }catch(CameraAccessException ex){
             Toast.makeText(getBaseContext(), "Camera exception", Toast.LENGTH_SHORT).show();
