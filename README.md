@@ -53,3 +53,4 @@ how to use the image utils
 how to use tensor flow on android 
 
 - https://www.youtube.com/watch?v=kFWKdLOxykE
+- https://github.com/llSourcell/A_Guide_to_Running_Tensorflow_Models_on_Android
