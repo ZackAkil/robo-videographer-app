@@ -9,7 +9,7 @@ Version 2 of rugby recording robot built into a mobile app with better machine l
 - [x] Display camera preview
 - [x] Access individual frame of camera
 - [x] Access some pixel value from individual frame from camera
-- [ ] Get frame in RGB
+- [x] Get frame in RGB
 - [ ] Run simple TensorFlow model
 - [ ] Pass image to simple TensorFlow model
 - [ ] Control arduino with output from tensorflow model
