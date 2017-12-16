@@ -51,5 +51,5 @@ how to use the image utils
 
 ---
 how to use tensor flow on android 
--
-https://www.youtube.com/watch?v=kFWKdLOxykE
+
+- https://www.youtube.com/watch?v=kFWKdLOxykE
