@@ -120,6 +120,10 @@ public class VideoActivity extends AppCompatActivity {
     private TextView mUDisplay;
     private TextView mVDisplay;
 
+    private byte[][] yuvBytes = new byte[3][];
+    private int[] rgbBytes = null;
+    private int yRowStride;
+
 
     private ImageReader.OnImageAvailableListener mImageReaderCallback =
             new ImageReader.OnImageAvailableListener() {
@@ -135,28 +139,52 @@ public class VideoActivity extends AppCompatActivity {
                         if (image.getPlanes()[0].getBuffer() == null) {
                             return;
                         }
+
+                        if (rgbBytes == null) {
+                            rgbBytes = new int[mPreviewSize.getWidth() * mPreviewSize.getHeight()];
+                        }
 //                        ByteBuffer buffer = image.getPlanes()[0].getBuffer();
 //                        byte[] pixels = buffer.array();
 //                        Log.d("My App", "sum ="+ buffer.toString());
+                        final Image.Plane[] planes = image.getPlanes();
+                        yRowStride = planes[0].getRowStride();
+                        final int uvRowStride = planes[1].getRowStride();
+                        final int uvPixelStride = planes[1].getPixelStride();
+                        fillBytes(planes, yuvBytes);
 
-                        Log.d("My App", "new counts");
-                        final int avgY = getAverageFromBuffer(image.getPlanes()[0].getBuffer());
-                        Log.d("My App", "sum ="+ avgY);
+                        ImageUtils.convertYUV420ToARGB8888(
+                                yuvBytes[0],
+                                yuvBytes[1],
+                                yuvBytes[2],
+                                mPreviewSize.getWidth(),
+                                mPreviewSize.getHeight(),
+                                yRowStride,
+                                uvRowStride,
+                                uvPixelStride,
+                                rgbBytes);
 
-                        final int avgU = getAverageFromBuffer(image.getPlanes()[1].getBuffer());
-                        Log.d("My App", "sum ="+ avgU);
+                        if (rgbFrameBitmap != null) {
+                            rgbFrameBitmap.setPixels(rgbBytes, 0, mPreviewSize.getWidth(), 0, 0, mPreviewSize.getWidth(), mPreviewSize.getHeight());
+                        }
 
-                        final int avgV = getAverageFromBuffer(image.getPlanes()[2].getBuffer());
-                        Log.d("My App", "sum ="+ avgV);
+//                        Log.d("My App", "new counts");
+//                        final int avgY = getAverageFromBuffer(image.getPlanes()[0].getBuffer());
+//                        Log.d("My App", "sum ="+ avgY);
+//
+//                        final int avgU = getAverageFromBuffer(image.getPlanes()[1].getBuffer());
+//                        Log.d("My App", "sum ="+ avgU);
+//
+//                        final int avgV = getAverageFromBuffer(image.getPlanes()[2].getBuffer());
+//                        Log.d("My App", "sum ="+ avgV);
 
 
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
 
-                        mYDisplay.setText(String.valueOf(avgY));
-                        mUDisplay.setText(String.valueOf(avgU));
-                        mVDisplay.setText(String.valueOf(avgV));
+//                        mYDisplay.setText(String.valueOf(avgY));
+//                        mUDisplay.setText(String.valueOf(avgU));
+//                        mVDisplay.setText(String.valueOf(avgV));
 
                             }
                         });
@@ -187,6 +215,19 @@ public class VideoActivity extends AppCompatActivity {
 //
 //            int avg = sum/count;
 //        return avg;
+    }
+
+    protected void fillBytes(final Image.Plane[] planes, final byte[][] yuvBytes) {
+        // Because of the variable row stride it's not possible to know in
+        // advance the actual necessary dimensions of the yuv planes.
+        for (int i = 0; i < planes.length; ++i) {
+            final ByteBuffer buffer = planes[i].getBuffer();
+            if (yuvBytes[i] == null) {
+//                LOGGER.d("Initializing buffer %d at size %d", i, buffer.capacity());
+                yuvBytes[i] = new byte[buffer.capacity()];
+            }
+            buffer.get(yuvBytes[i]);
+        }
     }
 
 
