@@ -48,7 +48,8 @@ these held the key to using image reader -
 ---
 how to use the image utils 
 - https://github.com/tensorflow/tensorflow/blob/15b1cf025da5c6ac2bcf4d4878ee222fca3aec4a/tensorflow/examples/android/src/org/tensorflow/demo/CameraActivity.java
--
+
 ---
 how to use tensor flow on android 
+-
 https://www.youtube.com/watch?v=kFWKdLOxykE
