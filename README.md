@@ -58,3 +58,7 @@ how to use tensor flow on android
 ---
 LSTM CNN
 - https://github.com/keras-team/keras/blob/master/examples/conv_lstm.py
+
+---
+## Nan in Keras loss problem
+The cause of this was that I had nan's / nulls in my y data. Removing them resolved this issue.
