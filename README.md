@@ -54,3 +54,7 @@ how to use tensor flow on android
 
 - https://www.youtube.com/watch?v=kFWKdLOxykE
 - https://github.com/llSourcell/A_Guide_to_Running_Tensorflow_Models_on_Android
+
+---
+LSTM CNN
+- https://github.com/keras-team/keras/blob/master/examples/conv_lstm.py
