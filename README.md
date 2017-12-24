@@ -10,9 +10,10 @@ Version 2 of rugby recording robot built into a mobile app with better machine l
 - [x] Access individual frame of camera
 - [x] Access some pixel value from individual frame from camera
 - [x] Get frame in RGB
-- [ ] Run simple TensorFlow model
-- [ ] Pass image to simple TensorFlow model
+- [x] Run simple TensorFlow model
+- [ ] Embed simple Tf model in android app
 - [ ] Control arduino with output from tensorflow model
+- [ ] Optimise TF model
 
 ## Notes
 Use native android (work thorugh this https://developer.android.com/training/index.html)
