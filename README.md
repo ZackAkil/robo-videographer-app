@@ -63,3 +63,14 @@ LSTM CNN
 ---
 ## Nan in Keras loss problem
 The cause of this was that I had nan's / nulls in my y data. Removing them resolved this issue.
+
+---
+## [node_name] not in graph when saving keras model as tf graph
+Fixed this issue by programatically getting the tensor names with the following code:
+```
+[x.op.name for x in model.outputs]
+```
+from _chris-smith-zocdoc_ at https://github.com/keras-team/keras/issues/6552
+
+Updated the saving code to fetch these names automatically.
+
