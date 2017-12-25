@@ -45,3 +45,7 @@ prototype_android/MyApplication5/.idea/codeStyleSettings.xml
 prototype_android/MyApplication5/.idea/workspace.xml
 
 machine_learning/data/images
+
+machine_learning/test_delta_data.npy
+
+machine_learning/out
