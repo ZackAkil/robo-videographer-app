@@ -11,6 +11,7 @@ Version 2 of rugby recording robot built into a mobile app with better machine l
 - [x] Access some pixel value from individual frame from camera
 - [x] Get frame in RGB
 - [x] Run simple TensorFlow model
+- [x] Export keras as tf graph for android
 - [ ] Embed simple Tf model in android app
 - [ ] Control arduino with output from tensorflow model
 - [ ] Optimise TF model
