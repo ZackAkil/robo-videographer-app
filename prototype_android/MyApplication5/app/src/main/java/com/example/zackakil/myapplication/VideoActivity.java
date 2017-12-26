@@ -127,6 +127,7 @@ public class VideoActivity extends AppCompatActivity {
     private int[] rgbBytes = null;
     private int yRowStride;
 
+    private TensorFlowInferenceInterface tfHelper;
 
     private ImageReader.OnImageAvailableListener mImageReaderCallback =
             new ImageReader.OnImageAvailableListener() {
@@ -241,6 +242,9 @@ public class VideoActivity extends AppCompatActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        tfHelper = new TensorFlowInferenceInterface(getAssets(), "frozen_cnn_delta_80_640_graph.pb");
+
         setContentView(R.layout.activity_video);
         nTextureView = (TextureView) findViewById(R.id.textureView);
 
