@@ -75,3 +75,12 @@ from _chris-smith-zocdoc_ at https://github.com/keras-team/keras/issues/6552
 
 Updated the saving code to fetch these names automatically.
 
+## Adding tensorflow dependancy to android project
+Using the info at - https://www.tensorflow.org/mobile/android_build
+Added dependancy by adding the following code to the `build.gradle (Module: app)` file :
+```
+dependencies {
+    compile 'org.tensorflow:tensorflow-android:+'
+}
+```
+
