@@ -49,3 +49,5 @@ machine_learning/data/images
 machine_learning/test_delta_data.npy
 
 machine_learning/out
+
+machine_learning/cnn_delta_80_640.h5
