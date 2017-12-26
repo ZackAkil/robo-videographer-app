@@ -84,4 +84,7 @@ dependencies {
     compile 'org.tensorflow:tensorflow-android:+'
 }
 ```
+---
+## java.io.IOException: Not a valid TensorFlow Graph serialization: NodeDef expected inputs ''
+Just use the `frozen*.pb` saved model and not the `opt*.pb` one.
 
