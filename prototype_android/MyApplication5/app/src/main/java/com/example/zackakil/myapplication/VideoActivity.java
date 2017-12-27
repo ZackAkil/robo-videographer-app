@@ -247,7 +247,10 @@ public class VideoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        tfHelper = new TensorFlowInferenceInterface(getAssets(), "frozen_cnn_delta_80_640_graph.pb");
+
+
+//        tfHelper = new TensorFlowInferenceInterface(getAssets(), "frozen_cnn_delta_80_640_graph.pb");
+        tfHelper = new TensorFlowInferenceInterface(getAssets(), "frozen_cnn_delta_80_640_graph_lp_1.pb");
 
         setContentView(R.layout.activity_video);
         nTextureView = (TextureView) findViewById(R.id.textureView);
@@ -292,15 +295,22 @@ public class VideoActivity extends AppCompatActivity {
 
         newRgbFrameBitmap.getPixels (pixels, 0, newRgbFrameBitmap.getWidth(), 0, 0, 640, 80);
 
-        tfHelper.feed("conv2d_6_input", pixels);
+        final float[] floatPixels = new float[80*640];
 
-        String[] outputNames = new String[] { "dense_15/BiasAdd" };
+        for(int i = 0; i<80*640; i++){
+            floatPixels[i] =  pixels[i];
+        }
+
+        tfHelper.feed("conv2d_1_input", floatPixels, 1, 80, 640, 1);
+        
+
+        String[] outputNames = new String[] { "dense_3/BiasAdd" };
 
         tfHelper.run(outputNames);
 
         float[] output = new float[1];
 
-        tfHelper.fetch("dense_15/BiasAdd", output);
+        tfHelper.fetch("dense_3/BiasAdd", output);
 
         return output[0];
     }
