@@ -12,9 +12,12 @@ Version 2 of rugby recording robot built into a mobile app with better machine l
 - [x] Get frame in RGB
 - [x] Run simple TensorFlow model
 - [x] Export keras as tf graph for android
-- [ ] Embed simple Tf model in android app
+- [x] Embed simple Tf model in android app
+- [ ] Calculate and feed delta image on android app
+- [ ] Modualirse code on android app 
 - [ ] Control arduino with output from tensorflow model
 - [ ] Optimise TF model
+- [ ] Find a way to use the optimised for inference model on android
 
 ## Notes
 Use native android (work thorugh this https://developer.android.com/training/index.html)
@@ -89,3 +92,6 @@ dependencies {
 ## java.io.IOException: Not a valid TensorFlow Graph serialization: NodeDef expected inputs ''
 Just use the `frozen*.pb` saved model and not the `opt*.pb` one.
 
+---
+## Tensorflow model on android not predicting because of dropout layer in wrong state
+Solution: remove dropout layer from model [not a true fix]
