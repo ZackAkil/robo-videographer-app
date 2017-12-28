@@ -68,6 +68,30 @@ LSTM CNN
 Googles usage -
 https://github.com/tensorflow/tensorflow/blob/fca253c282eedbfa4e82071af389bdb75ac13a90/tensorflow/examples/android/src/org/tensorflow/demo/TensorFlowImageClassifier.java
 
+specifically intrested in how they feed the bitmap image into the model:
+```java
+  public List<Recognition> recognizeImage(final Bitmap bitmap) {
+    // Log this method so that it can be analyzed with systrace.
+    Trace.beginSection("recognizeImage");
+
+    Trace.beginSection("preprocessBitmap");
+    // Preprocess the image data from 0-255 int to normalized float based
+    // on the provided parameters.
+    bitmap.getPixels(intValues, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(), bitmap.getHeight());
+    for (int i = 0; i < intValues.length; ++i) {
+      final int val = intValues[i];
+      floatValues[i * 3 + 0] = (((val >> 16) & 0xFF) - imageMean) / imageStd;
+      floatValues[i * 3 + 1] = (((val >> 8) & 0xFF) - imageMean) / imageStd;
+      floatValues[i * 3 + 2] = ((val & 0xFF) - imageMean) / imageStd;
+    }
+    Trace.endSection();
+
+    // Copy the input data into TensorFlow.
+    Trace.beginSection("feed");
+    inferenceInterface.feed(inputName, floatValues, 1, inputSize, inputSize, 3);
+    Trace.endSection();
+```
+
 ---
 ## Nan in Keras loss problem
 The cause of this was that I had nan's / nulls in my y data. Removing them resolved this issue.
