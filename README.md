@@ -65,6 +65,9 @@ how to use tensor flow on android
 LSTM CNN
 - https://github.com/keras-team/keras/blob/master/examples/conv_lstm.py
 
+Googles usage -
+https://github.com/tensorflow/tensorflow/blob/fca253c282eedbfa4e82071af389bdb75ac13a90/tensorflow/examples/android/src/org/tensorflow/demo/TensorFlowImageClassifier.java
+
 ---
 ## Nan in Keras loss problem
 The cause of this was that I had nan's / nulls in my y data. Removing them resolved this issue.
