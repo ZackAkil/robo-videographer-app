@@ -13,7 +13,8 @@ Version 2 of rugby recording robot built into a mobile app with better machine l
 - [x] Run simple TensorFlow model
 - [x] Export keras as tf graph for android
 - [x] Embed simple Tf model in android app
-- [ ] Calculate and feed delta image on android app
+- [x] Calculate and feed delta image on android app
+- [ ] Create some way of validating the data being fed into tf model (visualisation or input hist)
 - [ ] Modualirse code on android app 
 - [ ] Control arduino with output from tensorflow model
 - [ ] Optimise TF model
