@@ -5,8 +5,12 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Camera;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.graphics.ImageFormat;
+import android.graphics.Paint;
 import android.graphics.SurfaceTexture;
 import android.graphics.Bitmap.Config;
 import android.hardware.camera2.CameraAccessException;
@@ -126,6 +130,7 @@ public class VideoActivity extends AppCompatActivity {
     private byte[][] yuvBytes = new byte[3][];
     private int[] rgbBytes = null;
     private int yRowStride;
+    private float[] previousImage;
 
     private TensorFlowInferenceInterface tfHelper;
 
@@ -283,7 +288,38 @@ public class VideoActivity extends AppCompatActivity {
         }
     }
 
-    private float getPredictionFromTf(){
+    private Bitmap toGrayscale(Bitmap bmpOriginal)
+    {
+        int width, height;
+        height = bmpOriginal.getHeight();
+        width = bmpOriginal.getWidth();
+
+        Bitmap bmpGrayscale = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas c = new Canvas(bmpGrayscale);
+        Paint paint = new Paint();
+        ColorMatrix cm = new ColorMatrix();
+        cm.setSaturation(0);
+        ColorMatrixColorFilter f = new ColorMatrixColorFilter(cm);
+        paint.setColorFilter(f);
+        c.drawBitmap(bmpOriginal, 0, 0, paint);
+        return bmpGrayscale;
+    }
+
+    private float[] getDeltaPixels(float[] frame1, float[] frame2){
+
+        float[] deltaPixels = new float[80*640];
+
+        float sum = 0;
+        for(int i = 0; i<80*640; i++){
+            deltaPixels[i] = Math.max(frame1[i] - frame2[i], 0);
+            sum += Math.max(frame1[i] - frame2[i], 0);
+        }
+        Log.d("My App", "test ="+ frame1[0]);
+        Log.d("My App", "sum ="+ sum);
+        return deltaPixels;
+    }
+
+    private float[] processRgbFrame(){
 
         final int[] pixels = new int[80*640];
         Log.d("My App", "width ="+ rgbFrameBitmap.getWidth());
@@ -291,28 +327,52 @@ public class VideoActivity extends AppCompatActivity {
 
         Bitmap newRgbFrameBitmap = null;
 
-        newRgbFrameBitmap = Bitmap.createScaledBitmap(rgbFrameBitmap, 640, 80, false);
+        newRgbFrameBitmap = Bitmap.createScaledBitmap(toGrayscale(rgbFrameBitmap), 640, 80, false);
 
         newRgbFrameBitmap.getPixels (pixels, 0, newRgbFrameBitmap.getWidth(), 0, 0, 640, 80);
 
         final float[] floatPixels = new float[80*640];
 
         for(int i = 0; i<80*640; i++){
-            floatPixels[i] =  pixels[i];
+            floatPixels[i] =  ((float) Color.red(pixels[i])) / 255.f ;
         }
 
-        tfHelper.feed("input_input", floatPixels, 1, 80, 640, 1);
-        
+        if (previousImage != null) {
 
-        String[] outputNames = new String[] { "output/BiasAdd" };
+            final float[] output = getDeltaPixels(floatPixels, previousImage);
+            previousImage = floatPixels.clone();
 
-        tfHelper.run(outputNames);
 
-        float[] output = new float[1];
+            return output;
+        }else{
+            previousImage = floatPixels.clone();
+            return null;
+        }
 
-        tfHelper.fetch("output/BiasAdd", output);
 
-        return output[0];
+    }
+
+    private float getPredictionFromTf(){
+
+        final float[] floatPixels = processRgbFrame();
+
+        if (floatPixels != null) {
+
+            tfHelper.feed("input_input", floatPixels, 1, 80, 640, 1);
+
+
+            String[] outputNames = new String[]{"output/BiasAdd"};
+
+            tfHelper.run(outputNames);
+
+            float[] output = new float[1];
+
+            tfHelper.fetch("output/BiasAdd", output);
+
+            return output[0];
+        }else{
+            return 0;
+        }
     }
 
     private void setupCamera(int width, int height){
