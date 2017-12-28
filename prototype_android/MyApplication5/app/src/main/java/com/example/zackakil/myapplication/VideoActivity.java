@@ -36,8 +36,11 @@ import android.util.Log;
 import android.util.Size;
 import android.view.Surface;
 import android.view.TextureView;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
 
 import java.lang.reflect.Array;
 import java.nio.ByteBuffer;
@@ -131,6 +134,9 @@ public class VideoActivity extends AppCompatActivity {
     private int[] rgbBytes = null;
     private int yRowStride;
     private float[] previousImage;
+
+    private ProgressBar mProgressBar;
+    private ImageView mImageView;
 
     private TensorFlowInferenceInterface tfHelper;
 
@@ -263,6 +269,8 @@ public class VideoActivity extends AppCompatActivity {
         mYDisplay = (TextView) findViewById(R.id.textViewY);
         mUDisplay = (TextView) findViewById(R.id.textViewU);
         mVDisplay = (TextView) findViewById(R.id.textViewV);
+        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
+        mImageView = (ImageView) findViewById(R.id.imageView);
     }
 
     @Override
@@ -325,9 +333,15 @@ public class VideoActivity extends AppCompatActivity {
         Log.d("My App", "width ="+ rgbFrameBitmap.getWidth());
         Log.d("My App", "height ="+ rgbFrameBitmap.getHeight());
 
-        Bitmap newRgbFrameBitmap = null;
+//toGrayscale(
+        final Bitmap newRgbFrameBitmap = Bitmap.createScaledBitmap(rgbFrameBitmap, 640, 80, false);
 
-        newRgbFrameBitmap = Bitmap.createScaledBitmap(toGrayscale(rgbFrameBitmap), 640, 80, false);
+        runOnUiThread(new Runnable() {
+                          @Override
+                          public void run() {
+                              mImageView.setImageBitmap(rgbFrameBitmap);
+                          }
+                      });
 
         newRgbFrameBitmap.getPixels (pixels, 0, newRgbFrameBitmap.getWidth(), 0, 0, 640, 80);
 
@@ -369,6 +383,7 @@ public class VideoActivity extends AppCompatActivity {
 
             tfHelper.fetch("output/BiasAdd", output);
 
+            mProgressBar.setProgress((int)( output[0] *100));
             return output[0];
         }else{
             return 0;
