@@ -66,7 +66,7 @@ LSTM CNN
 - https://github.com/keras-team/keras/blob/master/examples/conv_lstm.py
 
 Googles usage -
-https://github.com/tensorflow/tensorflow/blob/fca253c282eedbfa4e82071af389bdb75ac13a90/tensorflow/examples/android/src/org/tensorflow/demo/TensorFlowImageClassifier.java
+- https://github.com/tensorflow/tensorflow/blob/fca253c282eedbfa4e82071af389bdb75ac13a90/tensorflow/examples/android/src/org/tensorflow/demo/TensorFlowImageClassifier.java
 
 specifically intrested in how they feed the bitmap image into the model:
 ```java
