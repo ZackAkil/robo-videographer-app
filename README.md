@@ -123,3 +123,17 @@ Just use the `frozen*.pb` saved model and not the `opt*.pb` one.
 ---
 ## Tensorflow model on android not predicting because of dropout layer in wrong state
 Solution: remove dropout layer from model [not a true fix]
+
+---
+## Image capture from camer is rotated 90 problem
+After creating a visualisation for the processed data it was apparent that the image data being fed to the CNN was in the wrong rotation. Apparently this is due to the default shooting orientation of android cameras, still curious why the preview render is the correct orientation???
+Fixed by rotating the bitmaps programatically
+- https://stackoverflow.com/a/14066265
+```java
+public static Bitmap rotateImage(Bitmap source, float angle) {
+    Matrix matrix = new Matrix();
+    matrix.postRotate(angle);
+    return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(),
+                               matrix, true);
+}
+```
