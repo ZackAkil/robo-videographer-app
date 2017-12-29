@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.ImageFormat;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.SurfaceTexture;
 import android.graphics.Bitmap.Config;
@@ -254,6 +255,13 @@ public class VideoActivity extends AppCompatActivity {
         }
     }
 
+    public static Bitmap rotateImage(Bitmap source, float angle) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(),
+                matrix, true);
+    }
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -334,12 +342,12 @@ public class VideoActivity extends AppCompatActivity {
         Log.d("My App", "height ="+ rgbFrameBitmap.getHeight());
 
 //toGrayscale(
-        final Bitmap newRgbFrameBitmap = Bitmap.createScaledBitmap(rgbFrameBitmap, 640, 80, false);
+        final Bitmap newRgbFrameBitmap = Bitmap.createScaledBitmap(toGrayscale(rotateImage(rgbFrameBitmap,90)), 640, 80, false);
 
         runOnUiThread(new Runnable() {
                           @Override
                           public void run() {
-                              mImageView.setImageBitmap(rgbFrameBitmap);
+                              mImageView.setImageBitmap(newRgbFrameBitmap);
                           }
                       });
 
