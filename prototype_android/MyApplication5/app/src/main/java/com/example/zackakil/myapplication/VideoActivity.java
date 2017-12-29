@@ -139,6 +139,8 @@ public class VideoActivity extends AppCompatActivity {
 
     private ProgressBar mProgressBar;
     private ImageView mImageView;
+    private TextView mPredictionTextView;
+    private TextView mSumTextView;
 
     private TensorFlowInferenceInterface tfHelper;
 
@@ -280,6 +282,8 @@ public class VideoActivity extends AppCompatActivity {
         mVDisplay = (TextView) findViewById(R.id.textViewV);
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         mImageView = (ImageView) findViewById(R.id.imageView);
+        mPredictionTextView = (TextView) findViewById(R.id.textViewPrediction);
+        mSumTextView = (TextView) findViewById(R.id.textViewSum);
     }
 
     @Override
@@ -331,6 +335,16 @@ public class VideoActivity extends AppCompatActivity {
             deltaPixels[i] = Math.max(frame1[i] - frame2[i], 0);
             sum += Math.max(frame1[i] - frame2[i], 0);
         }
+
+        final float finalSum = sum;
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mSumTextView.setText(String.valueOf(finalSum));
+            }
+        });
+
+
         Log.d("My App", "test ="+ frame1[0]);
         Log.d("My App", "sum ="+ sum);
         return deltaPixels;
@@ -428,6 +442,17 @@ public class VideoActivity extends AppCompatActivity {
             tfHelper.fetch("output/BiasAdd", output);
 
             mProgressBar.setProgress((int)( output[0] *100));
+
+            final String out = String.valueOf(output[0]);
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mPredictionTextView.setText(out);
+                }
+            });
+
+
             return output[0];
         }else{
             return 0;
