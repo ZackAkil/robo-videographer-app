@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Camera;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -344,12 +345,12 @@ public class VideoActivity extends AppCompatActivity {
 //toGrayscale(
         final Bitmap newRgbFrameBitmap = Bitmap.createScaledBitmap(toGrayscale(rotateImage(rgbFrameBitmap,90)), 640, 80, false);
 
-        runOnUiThread(new Runnable() {
-                          @Override
-                          public void run() {
-                              mImageView.setImageBitmap(newRgbFrameBitmap);
-                          }
-                      });
+//        runOnUiThread(new Runnable() {
+//                          @Override
+//                          public void run() {
+//                              mImageView.setImageBitmap(newRgbFrameBitmap);
+//                          }
+//                      });
 
         newRgbFrameBitmap.getPixels (pixels, 0, newRgbFrameBitmap.getWidth(), 0, 0, 640, 80);
 
@@ -362,6 +363,19 @@ public class VideoActivity extends AppCompatActivity {
         if (previousImage != null) {
 
             final float[] output = getDeltaPixels(floatPixels, previousImage);
+
+            final Bitmap bitmap = Bitmap.createBitmap(640, 80, Config.ARGB_8888);
+            int[] colours = floatArray2intArray(output);
+            bitmap.setPixels(colours, 0, 640, 0, 0, 640, 80);
+            Log.d("My App", "delta_width ="+ bitmap.getWidth());
+            Log.d("My App", "delta_height ="+ bitmap.getHeight());
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mImageView.setImageBitmap(bitmap);
+                }
+            });
+
             previousImage = floatPixels.clone();
 
 
@@ -372,6 +386,28 @@ public class VideoActivity extends AppCompatActivity {
         }
 
 
+    }
+
+    public static int [] floatArray2intArray (float[] values)
+    {
+        int[] out = new int[values.length];
+
+        for (int i =0; i<values.length; i++){
+            int c =  (int) Math.min(values[i]*255, 255);
+            out[i] = Color.rgb(c, c, c); //float2IntColor(values[i]);
+        }
+
+        return out;
+    }
+
+//    public static int float2IntColor(float val){
+//        int color = (100 & 0xff) << 24 | (c & 0xff) << 16 | (c & 0xff) << 8 | (c & 0xff);
+//        return color;
+//    }
+
+    public static byte [] float2ByteArray (float value)
+    {
+        return ByteBuffer.allocate(4).putFloat(value).array();
     }
 
     private float getPredictionFromTf(){
