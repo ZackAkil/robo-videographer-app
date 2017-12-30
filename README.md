@@ -15,7 +15,7 @@ Version 2 of rugby recording robot built into a mobile app with better machine l
 - [x] Embed simple Tf model in android app
 - [x] Calculate and feed delta image on android app
 - [x] Create some way of validating the data being fed into tf model (visualisation or input hist)
-- [ ] Add test frames into android and python to validate data being fed in is correct shapes
+- [x] Add test frames into android and python to validate data being fed in is correct shapes
 - [ ] Modualirse code on android app 
 - [ ] Control arduino with output from tensorflow model
 - [ ] Optimise TF model
