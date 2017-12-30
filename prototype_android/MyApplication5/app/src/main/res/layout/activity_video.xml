@@ -152,4 +152,16 @@
         app:layout_constraintLeft_toRightOf="@+id/textView7"
         app:layout_constraintTop_toBottomOf="@+id/textViewPrediction"/>
 
+    <Button
+        android:id="@+id/button4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="7dp"
+        android:elevation="0dp"
+        android:onClick="runSyntheticData"
+        android:text="Run Synthetic Data"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView"
+        android:layout_marginBottom="8dp"/>
+
 </android.support.constraint.ConstraintLayout>

@@ -38,12 +38,15 @@ import android.util.Log;
 import android.util.Size;
 import android.view.Surface;
 import android.view.TextureView;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Array;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -141,6 +144,10 @@ public class VideoActivity extends AppCompatActivity {
     private ImageView mImageView;
     private TextView mPredictionTextView;
     private TextView mSumTextView;
+
+    private Bitmap syntheticImage = null;
+    private boolean useSyntheticImage = false;
+    private int syntheticImageToUse = 0;
 
     private TensorFlowInferenceInterface tfHelper;
 
@@ -380,15 +387,39 @@ public class VideoActivity extends AppCompatActivity {
 
             final Bitmap bitmap = Bitmap.createBitmap(640, 80, Config.ARGB_8888);
             int[] colours = floatArray2intArray(output);
-            bitmap.setPixels(colours, 0, 640, 0, 0, 640, 80);
-            Log.d("My App", "delta_width ="+ bitmap.getWidth());
-            Log.d("My App", "delta_height ="+ bitmap.getHeight());
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    mImageView.setImageBitmap(bitmap);
+
+            if (!useSyntheticImage) {
+                bitmap.setPixels(colours, 0, 640, 0, 0, 640, 80);
+
+                Log.d("My App", "delta_width =" + bitmap.getWidth());
+                Log.d("My App", "delta_height =" + bitmap.getHeight());
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mImageView.setImageBitmap(bitmap);
+                    }
+                });
+            }else{
+                final Bitmap synthBitmap = syntheticImage;
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mImageView.setImageBitmap(synthBitmap);
+                    }
+                });
+
+                final float[] synthFloatPixels = new float[80*640];
+
+                synthBitmap.getPixels (pixels, 0, synthBitmap.getWidth(), 0, 0, 640, 80);
+
+                for(int i = 0; i<80*640; i++){
+                    synthFloatPixels[i] =  ((float) Color.red(pixels[i])) / 255.f ;
                 }
-            });
+                return synthFloatPixels;
+
+            }
+
 
             previousImage = floatPixels.clone();
 
@@ -457,6 +488,23 @@ public class VideoActivity extends AppCompatActivity {
         }else{
             return 0;
         }
+    }
+
+    public void runSyntheticData(View view){
+//        toggle sythn trigger
+        useSyntheticImage = true;
+//        loop image id
+        syntheticImageToUse = (syntheticImageToUse + 1) % 5;
+
+        try {
+            InputStream open = getAssets().open(syntheticImageToUse+".png");
+            syntheticImage = BitmapFactory.decodeStream(open);
+        }catch(IOException e){
+            Toast.makeText(getBaseContext(), "Loading image error", Toast.LENGTH_SHORT).show();
+            Log.d("My App", "NO IMAGE "+syntheticImageToUse);
+        }
+//        set image to next bitmap from assets
+
     }
 
     private void setupCamera(int width, int height){
