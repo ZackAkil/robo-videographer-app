@@ -4,17 +4,12 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
-import android.graphics.Camera;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.ColorMatrix;
-import android.graphics.ColorMatrixColorFilter;
 import android.graphics.ImageFormat;
 import android.graphics.Matrix;
-import android.graphics.Paint;
 import android.graphics.SurfaceTexture;
-import android.graphics.Bitmap.Config;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CameraCharacteristics;
@@ -24,16 +19,13 @@ import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.Image;
 import android.media.ImageReader;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.os.Message;
-import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.util.Size;
 import android.view.Surface;
@@ -44,10 +36,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Array;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -138,7 +128,6 @@ public class VideoActivity extends AppCompatActivity {
     private byte[][] yuvBytes = new byte[3][];
     private int[] rgbBytes = null;
     private int yRowStride;
-    private float[] previousImage;
 
     private ProgressBar mProgressBar;
     private ImageView mImageView;
@@ -242,18 +231,6 @@ public class VideoActivity extends AppCompatActivity {
                 }
             };
 
-    private int getAverageFromBuffer(ByteBuffer buffer){
-            int sum  = 0;
-            int count = buffer.remaining() ;
-            Log.d("My App", "size: "+ count);
-            return buffer.get() & 0xFF;
-//            while (buffer.hasRemaining()){
-//                sum +=  buffer.get();
-//            }
-//
-//            int avg = sum/count;
-//        return avg;
-    }
 
     protected void fillBytes(final Image.Plane[] planes, final byte[][] yuvBytes) {
         // Because of the variable row stride it's not possible to know in
@@ -322,119 +299,8 @@ public class VideoActivity extends AppCompatActivity {
         }
     }
 
-    private Bitmap toGrayscale(Bitmap bmpOriginal)
-    {
-        int width, height;
-        height = bmpOriginal.getHeight();
-        width = bmpOriginal.getWidth();
 
-        Bitmap bmpGrayscale = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        Canvas c = new Canvas(bmpGrayscale);
-        Paint paint = new Paint();
-        ColorMatrix cm = new ColorMatrix();
-        cm.setSaturation(0);
-        ColorMatrixColorFilter f = new ColorMatrixColorFilter(cm);
-        paint.setColorFilter(f);
-        c.drawBitmap(bmpOriginal, 0, 0, paint);
-        return bmpGrayscale;
-    }
-
-    private float[] getDeltaPixels(float[] frame1, float[] frame2){
-
-        float[] deltaPixels = new float[80*640];
-
-        float sum = 0;
-        for(int i = 0; i<80*640; i++){
-            deltaPixels[i] = Math.max(frame1[i] - frame2[i], 0);
-            sum += Math.max(frame1[i] - frame2[i], 0);
-        }
-
-        final float finalSum = sum;
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mSumTextView.setText(String.valueOf(finalSum));
-            }
-        });
-
-
-        Log.d("My App", "test ="+ frame1[0]);
-        Log.d("My App", "sum ="+ sum);
-        return deltaPixels;
-    }
-
-    private float[] processRgbFrame(){
-
-        final int[] pixels = new int[80*640];
-        Log.d("My App", "width ="+ rgbFrameBitmap.getWidth());
-        Log.d("My App", "height ="+ rgbFrameBitmap.getHeight());
-
-//toGrayscale(
-        final Bitmap newRgbFrameBitmap = Bitmap.createScaledBitmap(toGrayscale(rotateImage(rgbFrameBitmap,90)), 640, 80, false);
-
-
-
-        newRgbFrameBitmap.getPixels (pixels, 0, newRgbFrameBitmap.getWidth(), 0, 0, 640, 80);
-
-        final float[] floatPixels = new float[80*640];
-
-        for(int i = 0; i<80*640; i++){
-            floatPixels[i] =  ((float) Color.red(pixels[i])) / 255.f ;
-        }
-
-        if (previousImage != null) {
-
-            final float[] output = getDeltaPixels(floatPixels, previousImage);
-
-            final Bitmap bitmap = Bitmap.createBitmap(640, 80, Config.ARGB_8888);
-            int[] colours = floatArray2intArray(output);
-
-            if (!useSyntheticImage) {
-                bitmap.setPixels(colours, 0, 640, 0, 0, 640, 80);
-
-                Log.d("My App", "delta_width =" + bitmap.getWidth());
-                Log.d("My App", "delta_height =" + bitmap.getHeight());
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mImageView.setImageBitmap(bitmap);
-                    }
-                });
-            }else{
-                final Bitmap synthBitmap = syntheticImage;
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mImageView.setImageBitmap(synthBitmap);
-                    }
-                });
-
-                final float[] synthFloatPixels = new float[80*640];
-
-                synthBitmap.getPixels (pixels, 0, synthBitmap.getWidth(), 0, 0, 640, 80);
-
-                for(int i = 0; i<80*640; i++){
-                    synthFloatPixels[i] =  ((float) Color.red(pixels[i])) / 255.f ;
-                }
-                return synthFloatPixels;
-
-            }
-
-
-            previousImage = floatPixels.clone();
-
-
-            return output;
-        }else{
-            previousImage = floatPixels.clone();
-            return null;
-        }
-
-
-    }
-
-    private float[] GetSyntheticPixels(){
+    private float[] getSyntheticPixels(){
         final int[] pixels = new int[80*640];
         final Bitmap synthBitmap = syntheticImage;
 
@@ -455,17 +321,6 @@ public class VideoActivity extends AppCompatActivity {
         return synthFloatPixels;
     }
 
-    public static int [] floatArray2intArray (float[] values)
-    {
-        int[] out = new int[values.length];
-
-        for (int i =0; i<values.length; i++){
-            int c =  (int) Math.min(values[i]*255, 255);
-            out[i] = Color.rgb(c, c, c);
-        }
-
-        return out;
-    }
 
 
     private float getPredictionFromTf(){
@@ -477,9 +332,8 @@ public class VideoActivity extends AppCompatActivity {
 
             floatPixels = imagePreProcessor.getLatestDeltaFrame();
         }else{
-            floatPixels = GetSyntheticPixels();
+            floatPixels = getSyntheticPixels();
         }
-
 
 
         if (floatPixels != null) {
@@ -495,7 +349,6 @@ public class VideoActivity extends AppCompatActivity {
                 });
 
 
-
             float prediction = predictor.predict(floatPixels);
 
             mProgressBar.setProgress((int)( prediction *100));
@@ -509,7 +362,6 @@ public class VideoActivity extends AppCompatActivity {
                 }
             });
 
-
             return prediction;
         }else{
             return 0;
@@ -522,6 +374,7 @@ public class VideoActivity extends AppCompatActivity {
 //        loop image id
         syntheticImageToUse = (syntheticImageToUse + 1) % 5;
 
+//        set image to next bitmap from assets
         try {
             InputStream open = getAssets().open(syntheticImageToUse+".png");
             syntheticImage = BitmapFactory.decodeStream(open);
@@ -529,7 +382,6 @@ public class VideoActivity extends AppCompatActivity {
             Toast.makeText(getBaseContext(), "Loading image error", Toast.LENGTH_SHORT).show();
             Log.d("My App", "NO IMAGE "+syntheticImageToUse);
         }
-//        set image to next bitmap from assets
 
     }
 
@@ -558,7 +410,6 @@ public class VideoActivity extends AppCompatActivity {
 
                 return;
             }
-
 
 
 
