@@ -55,7 +55,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.tensorflow.contrib.android.TensorFlowInferenceInterface;
 
 
 public class VideoActivity extends AppCompatActivity {
@@ -135,6 +134,7 @@ public class VideoActivity extends AppCompatActivity {
     private TextView mUDisplay;
     private TextView mVDisplay;
 
+
     private byte[][] yuvBytes = new byte[3][];
     private int[] rgbBytes = null;
     private int yRowStride;
@@ -149,7 +149,9 @@ public class VideoActivity extends AppCompatActivity {
     private boolean useSyntheticImage = false;
     private int syntheticImageToUse = 0;
 
-    private TensorFlowInferenceInterface tfHelper;
+
+
+    private TfPredictor predictor;
 
     private ImageReader.OnImageAvailableListener mImageReaderCallback =
             new ImageReader.OnImageAvailableListener() {
@@ -277,9 +279,11 @@ public class VideoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
 
-
-//        tfHelper = new TensorFlowInferenceInterface(getAssets(), "frozen_cnn_delta_80_640_graph.pb");
-        tfHelper = new TensorFlowInferenceInterface(getAssets(), "frozen_cnn_delta_80_640_graph.pb");
+        predictor = new TfPredictor(getString(R.string.cnnModelName),
+                                    getAssets(),
+                                    "input_input",
+                                    "output/BiasAdd",
+                                    new int[]{80, 640,1});
 
         setContentView(R.layout.activity_video);
         nTextureView = (TextureView) findViewById(R.id.textureView);
@@ -366,12 +370,7 @@ public class VideoActivity extends AppCompatActivity {
 //toGrayscale(
         final Bitmap newRgbFrameBitmap = Bitmap.createScaledBitmap(toGrayscale(rotateImage(rgbFrameBitmap,90)), 640, 80, false);
 
-//        runOnUiThread(new Runnable() {
-//                          @Override
-//                          public void run() {
-//                              mImageView.setImageBitmap(newRgbFrameBitmap);
-//                          }
-//                      });
+
 
         newRgbFrameBitmap.getPixels (pixels, 0, newRgbFrameBitmap.getWidth(), 0, 0, 640, 80);
 
@@ -439,21 +438,12 @@ public class VideoActivity extends AppCompatActivity {
 
         for (int i =0; i<values.length; i++){
             int c =  (int) Math.min(values[i]*255, 255);
-            out[i] = Color.rgb(c, c, c); //float2IntColor(values[i]);
+            out[i] = Color.rgb(c, c, c);
         }
 
         return out;
     }
 
-//    public static int float2IntColor(float val){
-//        int color = (100 & 0xff) << 24 | (c & 0xff) << 16 | (c & 0xff) << 8 | (c & 0xff);
-//        return color;
-//    }
-
-    public static byte [] float2ByteArray (float value)
-    {
-        return ByteBuffer.allocate(4).putFloat(value).array();
-    }
 
     private float getPredictionFromTf(){
 
@@ -461,20 +451,12 @@ public class VideoActivity extends AppCompatActivity {
 
         if (floatPixels != null) {
 
-            tfHelper.feed("input_input", floatPixels, 1, 80, 640, 1);
 
+            float prediction = predictor.predict(floatPixels);
 
-            String[] outputNames = new String[]{"output/BiasAdd"};
+            mProgressBar.setProgress((int)( prediction *100));
 
-            tfHelper.run(outputNames);
-
-            float[] output = new float[1];
-
-            tfHelper.fetch("output/BiasAdd", output);
-
-            mProgressBar.setProgress((int)( output[0] *100));
-
-            final String out = String.valueOf(output[0]);
+            final String out = String.valueOf(prediction);
 
             runOnUiThread(new Runnable() {
                 @Override
@@ -484,7 +466,7 @@ public class VideoActivity extends AppCompatActivity {
             });
 
 
-            return output[0];
+            return prediction;
         }else{
             return 0;
         }
