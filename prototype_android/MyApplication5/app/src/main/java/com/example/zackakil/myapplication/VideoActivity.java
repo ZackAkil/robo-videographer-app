@@ -434,6 +434,27 @@ public class VideoActivity extends AppCompatActivity {
 
     }
 
+    private float[] GetSyntheticPixels(){
+        final int[] pixels = new int[80*640];
+        final Bitmap synthBitmap = syntheticImage;
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mImageView.setImageBitmap(synthBitmap);
+            }
+        });
+
+        final float[] synthFloatPixels = new float[80*640];
+
+        synthBitmap.getPixels (pixels, 0, synthBitmap.getWidth(), 0, 0, 640, 80);
+
+        for(int i = 0; i<80*640; i++){
+            synthFloatPixels[i] =  ((float) Color.red(pixels[i])) / 255.f ;
+        }
+        return synthFloatPixels;
+    }
+
     public static int [] floatArray2intArray (float[] values)
     {
         int[] out = new int[values.length];
@@ -449,11 +470,15 @@ public class VideoActivity extends AppCompatActivity {
 
     private float getPredictionFromTf(){
 
-        imagePreProcessor.feedFrame(rotateImage(rgbFrameBitmap, 90));
+        float[] floatPixels;
 
-        final float[] floatPixels = imagePreProcessor.getLatestDeltaFrame();
+        if (! useSyntheticImage) {
+            imagePreProcessor.feedFrame(rotateImage(rgbFrameBitmap, 90));
 
-//        final float[] floatPixels = processRgbFrame();
+            floatPixels = imagePreProcessor.getLatestDeltaFrame();
+        }else{
+            floatPixels = GetSyntheticPixels();
+        }
 
 
 
@@ -461,12 +486,13 @@ public class VideoActivity extends AppCompatActivity {
 
             final Bitmap bitmap = imagePreProcessor.getLatestDeltaFrameAsBitmap();
 
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    mImageView.setImageBitmap(bitmap);
-                }
-            });
+            if(!useSyntheticImage)
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mImageView.setImageBitmap(bitmap);
+                    }
+                });
 
 
 
