@@ -449,10 +449,7 @@ public class VideoActivity extends AppCompatActivity {
 
     private float getPredictionFromTf(){
 
-        if(rgbFrameBitmap != null) {
-
-            imagePreProcessor.feedFrame(rotateImage(rgbFrameBitmap, 90));
-        }
+        imagePreProcessor.feedFrame(rotateImage(rgbFrameBitmap, 90));
 
         final float[] floatPixels = imagePreProcessor.getLatestDeltaFrame();
 
@@ -461,6 +458,16 @@ public class VideoActivity extends AppCompatActivity {
 
 
         if (floatPixels != null) {
+
+            final Bitmap bitmap = imagePreProcessor.getLatestDeltaFrameAsBitmap();
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mImageView.setImageBitmap(bitmap);
+                }
+            });
+
 
 
             float prediction = predictor.predict(floatPixels);

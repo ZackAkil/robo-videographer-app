@@ -20,7 +20,9 @@ public class ImagePreProcessor {
     private float[] deltaPixels;
     private int frameSize;
     private int frameHeight;
-    private  int frameWidth;
+    private int frameWidth;
+    private Bitmap deltaBitmap;
+
 
 
     ImagePreProcessor(int frameWidth, int frameHeight){
@@ -32,6 +34,8 @@ public class ImagePreProcessor {
         this.currentFramePixels = new int[this.frameSize];
         this.deltaPixels = new float[this.frameSize];
         this.currentFrameFloatPixels = new float[this.frameSize];
+        this.deltaBitmap = Bitmap.createBitmap(this.frameWidth, this.frameHeight,
+                                                Bitmap.Config.ARGB_8888);
     }
 
 
@@ -42,7 +46,7 @@ public class ImagePreProcessor {
     public void feedFrame(Bitmap frame){
 
         final Bitmap newRgbFrameBitmap = Bitmap.createScaledBitmap(
-                                                ImagePreProcessor.toGrayscale(frame),
+                                                toGrayscale(frame),
                                                 this.frameWidth, this.frameHeight, false);
 
         newRgbFrameBitmap.getPixels(this.currentFramePixels, 0, this.frameWidth, 0, 0,
@@ -66,6 +70,14 @@ public class ImagePreProcessor {
         }
 
         return this.deltaPixels;
+    }
+
+    public Bitmap getLatestDeltaFrameAsBitmap(){
+
+        this.deltaBitmap.setPixels(floatArray2IntArray(this.deltaPixels),
+                                    0, this.frameWidth, 0, 0, this.frameWidth, this.frameHeight);
+
+        return this.deltaBitmap;
     }
 
     private static Bitmap toGrayscale(Bitmap bmpOriginal)
