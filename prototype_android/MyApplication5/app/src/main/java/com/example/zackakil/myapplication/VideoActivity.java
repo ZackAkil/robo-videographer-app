@@ -152,6 +152,7 @@ public class VideoActivity extends AppCompatActivity {
 
 
     private TfPredictor predictor;
+    private ImagePreProcessor imagePreProcessor;
 
     private ImageReader.OnImageAvailableListener mImageReaderCallback =
             new ImageReader.OnImageAvailableListener() {
@@ -278,6 +279,7 @@ public class VideoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        imagePreProcessor = new ImagePreProcessor(640, 80);
 
         predictor = new TfPredictor(getString(R.string.cnnModelName),
                                     getAssets(),
@@ -447,7 +449,16 @@ public class VideoActivity extends AppCompatActivity {
 
     private float getPredictionFromTf(){
 
-        final float[] floatPixels = processRgbFrame();
+        if(rgbFrameBitmap != null) {
+
+            imagePreProcessor.feedFrame(rotateImage(rgbFrameBitmap, 90));
+        }
+
+        final float[] floatPixels = imagePreProcessor.getLatestDeltaFrame();
+
+//        final float[] floatPixels = processRgbFrame();
+
+
 
         if (floatPixels != null) {
 

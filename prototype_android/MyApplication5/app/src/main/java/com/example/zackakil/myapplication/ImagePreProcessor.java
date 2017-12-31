@@ -14,7 +14,7 @@ import android.util.Log;
 
 public class ImagePreProcessor {
 
-    private float[] previousFrame;
+    private float[] previousFrameFloatPixels;
     private int[] currentFramePixels;
     private float[] currentFrameFloatPixels;
     private float[] deltaPixels;
@@ -27,14 +27,18 @@ public class ImagePreProcessor {
 
         this.frameWidth = frameWidth;
         this.frameHeight = frameHeight;
-
         this.frameSize = this.frameWidth * this.frameHeight;
-        this.previousFrame = new float[this.frameSize];
+
+        this.currentFramePixels = new int[this.frameSize];
         this.deltaPixels = new float[this.frameSize];
         this.currentFrameFloatPixels = new float[this.frameSize];
     }
 
 
+    /**
+     * @param frame un-processed frame from camera
+     *
+     */
     public void feedFrame(Bitmap frame){
 
         final Bitmap newRgbFrameBitmap = Bitmap.createScaledBitmap(
@@ -44,14 +48,24 @@ public class ImagePreProcessor {
         newRgbFrameBitmap.getPixels(this.currentFramePixels, 0, this.frameWidth, 0, 0,
                                         this.frameWidth, this.frameHeight);
 
-        for(int i = 0; i<80*640; i++){
+        this.previousFrameFloatPixels = this.currentFrameFloatPixels.clone();
+
+        for(int i = 0; i<this.frameSize; i++){
             this.currentFrameFloatPixels[i] = ((float) Color.red(this.currentFramePixels[i])) / 255.f ;
         }
+
     }
 
     public float[] getLatestDeltaFrame(){
 
-        return null;
+        if (this.previousFrameFloatPixels == null)
+            return null;
+
+        for(int i = 0; i < this.frameSize; i++){
+            this.deltaPixels[i] = Math.max(this.currentFrameFloatPixels[i] - this.previousFrameFloatPixels[i], 0);
+        }
+
+        return this.deltaPixels;
     }
 
     private static Bitmap toGrayscale(Bitmap bmpOriginal)
@@ -71,20 +85,20 @@ public class ImagePreProcessor {
         return bmpGrayscale;
     }
 
-    private float[] getDeltaPixels(float[] frame1, float[] frame2){
+//    private float[] getDeltaPixels(float[] frame1, float[] frame2){
+//
+//
+//        float sum = 0;
+//        for(int i = 0; i<this.frameSize; i++){
+//            this.deltaPixels[i] = Math.max(frame1[i] - frame2[i], 0);
+//            sum += Math.max(frame1[i] - frame2[i], 0);
+//        }
+//
+//        Log.d("My App", "sum ="+ sum);
+//        return this.deltaPixels;
+//    }
 
-
-        float sum = 0;
-        for(int i = 0; i<this.frameSize; i++){
-            this.deltaPixels[i] = Math.max(frame1[i] - frame2[i], 0);
-            sum += Math.max(frame1[i] - frame2[i], 0);
-        }
-
-        Log.d("My App", "sum ="+ sum);
-        return this.deltaPixels;
-    }
-
-    public static int [] floatArray2intArray (float[] values)
+    private static int [] floatArray2IntArray (float[] values)
     {
         int[] out = new int[values.length];
 
