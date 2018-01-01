@@ -138,3 +138,7 @@ public static Bitmap rotateImage(Bitmap source, float angle) {
                                matrix, true);
 }
 ```
+
+---
+Android arbitrary storage: Room
+- https://developer.android.com/topic/libraries/architecture/room.html
