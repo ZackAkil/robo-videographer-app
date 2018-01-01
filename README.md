@@ -1,6 +1,8 @@
 # Robo videographer app
 Version 2 of rugby recording robot built into a mobile app with better machine learning.
 
+![logo](https://raw.githubusercontent.com/ZackAkil/robo-videographer-app/master/images/logo_v1.png?token=AHzLTPrzPkRvMVcVyBDEr7DeM5EwN9M1ks5aU-N2wA%3D%3D)
+
 ## Plan
 
 - [x] Connect bluetooth android to arduino
