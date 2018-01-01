@@ -143,3 +143,8 @@ public static Bitmap rotateImage(Bitmap source, float angle) {
 Android arbitrary storage: Room
 - https://developer.android.com/topic/libraries/architecture/room.html
 - https://developer.android.com/training/data-storage/room/index.html
+
+---
+git deployment stuff for the platform
+- https://blog.pythonanywhere.com/87/
+
