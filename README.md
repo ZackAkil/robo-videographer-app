@@ -150,3 +150,6 @@ Android arbitrary storage: Room
 git deployment stuff for the platform
 - https://blog.pythonanywhere.com/87/
 
+---
+list of recordings
+- https://developer.android.com/guide/topics/ui/layout/listview.html
