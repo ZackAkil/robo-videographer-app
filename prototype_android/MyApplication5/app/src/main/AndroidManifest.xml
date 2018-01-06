@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.zackakil.myapplication">
+          package="com.example.zackakil.myapplication">
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
 
-    <uses-feature android:name="android.hardware.camera2" />
+    <uses-feature android:name="android.hardware.camera2"/>
     <uses-feature android:name="android.hardware.camera2.full"/>
-
-    <uses-feature android:name="android.hardware.camera"
-                  android:required="true" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true"/>
 
     <application
         android:allowBackup="true"
@@ -22,20 +22,25 @@
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity
             android:name=".DisplayMessageActivity"
-            android:parentActivityName=".MainActivity"></activity>
+            android:parentActivityName=".MainActivity"/>
         <activity
             android:name=".BigTextView"
-            android:parentActivityName=".MainActivity"></activity>
+            android:parentActivityName=".MainActivity"/>
         <activity
             android:name=".VideoActivity"
+            android:label="Video"
+            android:parentActivityName=".MainActivity"/>
+        <activity
+            android:label="List"
             android:parentActivityName=".MainActivity"
-            android:label="Video" ></activity>
+            android:name=".ListActivity"/>
     </application>
 
 </manifest>
