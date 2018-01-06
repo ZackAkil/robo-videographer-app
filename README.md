@@ -162,3 +162,4 @@ create simple list item views
 
 create custom list item views
 - https://www.youtube.com/watch?v=_sStCBdJkQg
+- https://www.youtube.com/watch?v=nOdSARCVYic
