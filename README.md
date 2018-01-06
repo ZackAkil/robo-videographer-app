@@ -156,3 +156,7 @@ git deployment stuff for the platform
 ---
 list of recordings
 - https://developer.android.com/guide/topics/ui/layout/listview.html
+create simple list item views
+- https://www.youtube.com/watch?v=A-_hKWMA7mk
+create custom list item views
+- https://www.youtube.com/watch?v=_sStCBdJkQg
