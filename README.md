@@ -170,3 +170,7 @@ create custom list item views
 ---
 Read/write files
 - https://www.youtube.com/watch?v=EcfUkjlL9RI
+
+---
+Crop bitmap image
+- https://stackoverflow.com/questions/3846338/how-to-crop-an-image-in-android
