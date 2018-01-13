@@ -34,6 +34,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -143,6 +144,8 @@ public class VideoActivity extends AppCompatActivity {
     private SeekBar mSeekBarHeight;
     private int mWidthCropVal;
     private int mHeightCropVal;
+
+    private Switch mCropViewSwitch;
 
     private TfPredictor predictor;
     private ImagePreProcessor imagePreProcessor;
@@ -308,6 +311,7 @@ public class VideoActivity extends AppCompatActivity {
                     public void onStopTrackingTouch(SeekBar seekBar) {}
                 });
 
+        mCropViewSwitch = (Switch) findViewById(R.id.switchCropView);
 
     }
 
@@ -373,15 +377,33 @@ public class VideoActivity extends AppCompatActivity {
 
         if (floatPixels != null) {
 
-            final Bitmap bitmap = imagePreProcessor.getCroppedFrame();
+            if (mCropViewSwitch.isChecked()){
 
-            if(!useSyntheticImage)
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mImageView.setImageBitmap(bitmap);
-                    }
-                });
+                final Bitmap bitmap = imagePreProcessor.getCroppedFrame();
+
+                if(!useSyntheticImage)
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mImageView.setImageBitmap(bitmap);
+                        }
+                    });
+
+            }else{
+
+                final Bitmap bitmap = imagePreProcessor.getLatestDeltaFrameAsBitmap();
+
+                if(!useSyntheticImage)
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mImageView.setImageBitmap(bitmap);
+                        }
+                    });
+
+            }
+
+
 
 
             float prediction = predictor.predict(floatPixels);
