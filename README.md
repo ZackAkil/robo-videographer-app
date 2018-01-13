@@ -20,10 +20,11 @@ Version 2 of rugby recording robot built into a mobile app with better machine l
 - [x] Add test frames into android and python to validate data being fed in is correct shapes
 - [ ] Modualirse code on android app 
 - [ ] Save data (recordings)
-- [ ] *Control arduino with output from tensorflow model
+- [x] *Control arduino with output from tensorflow model
 - [ ] *Optimise TF model
 - [ ] *Find a way to use the optimised for inference model on android
 - [x] *Adjustable crop
+
 
 *MVP
 
