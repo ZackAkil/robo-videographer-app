@@ -24,7 +24,8 @@ Version 2 of rugby recording robot built into a mobile app with better machine l
 - [ ] *Optimise TF model
 - [ ] *Find a way to use the optimised for inference model on android
 - [x] *Adjustable crop
-
+- [ ] FPS tracker
+- [ ] Refactor into threads
 
 *MVP
 
