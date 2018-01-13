@@ -363,7 +363,7 @@ public class VideoActivity extends AppCompatActivity {
         float[] floatPixels;
 
         if (! useSyntheticImage) {
-            imagePreProcessor.feedFrame(rotateImage(rgbFrameBitmap, 90));
+            imagePreProcessor.feedFrame(rotateImage(rgbFrameBitmap, 90), mWidthCropVal, mHeightCropVal);
 
             floatPixels = imagePreProcessor.getLatestDeltaFrame();
         }else{
@@ -373,7 +373,7 @@ public class VideoActivity extends AppCompatActivity {
 
         if (floatPixels != null) {
 
-            final Bitmap bitmap = imagePreProcessor.getLatestDeltaFrameAsBitmap();
+            final Bitmap bitmap = imagePreProcessor.getCroppedFrame();
 
             if(!useSyntheticImage)
                 runOnUiThread(new Runnable() {

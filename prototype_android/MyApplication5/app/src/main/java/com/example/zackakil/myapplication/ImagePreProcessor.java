@@ -22,6 +22,7 @@ public class ImagePreProcessor {
     private int frameHeight;
     private int frameWidth;
     private Bitmap deltaBitmap;
+    private Bitmap croppedFrame;
 
 
 
@@ -43,10 +44,19 @@ public class ImagePreProcessor {
      * @param frame un-processed frame from camera
      *
      */
-    public void feedFrame(Bitmap frame){
+    public void feedFrame(Bitmap frame, int cropX, int cropY){
+
+
+        int widthOffset =  (int)( frame.getWidth()/200.f * cropX );
+        int heightOffset = (int)( frame.getHeight()/200.f * cropY );
+
+        Log.d("My App", "height crop ="+ widthOffset);
+        Log.d("My App", "width crop ="+ heightOffset);
+
+        this.croppedFrame = Bitmap.createBitmap(frame, widthOffset, heightOffset, frame.getWidth() - widthOffset*2, frame.getHeight() - heightOffset*2);
 
         final Bitmap newRgbFrameBitmap = Bitmap.createScaledBitmap(
-                                                toGrayscale(frame),
+                                                toGrayscale(this.croppedFrame),
                                                 this.frameWidth, this.frameHeight, false);
 
         newRgbFrameBitmap.getPixels(this.currentFramePixels, 0, this.frameWidth, 0, 0,
@@ -78,6 +88,10 @@ public class ImagePreProcessor {
                                     0, this.frameWidth, 0, 0, this.frameWidth, this.frameHeight);
 
         return this.deltaBitmap;
+    }
+
+    public Bitmap getCroppedFrame(){
+        return this.croppedFrame;
     }
 
     private static Bitmap toGrayscale(Bitmap bmpOriginal)
