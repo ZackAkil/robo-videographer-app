@@ -33,6 +33,7 @@ import android.view.TextureView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -138,7 +139,10 @@ public class VideoActivity extends AppCompatActivity {
     private boolean useSyntheticImage = false;
     private int syntheticImageToUse = 0;
 
-
+    private SeekBar mSeekBarWidth;
+    private SeekBar mSeekBarHeight;
+    private int mWidthCropVal;
+    private int mHeightCropVal;
 
     private TfPredictor predictor;
     private ImagePreProcessor imagePreProcessor;
@@ -161,9 +165,7 @@ public class VideoActivity extends AppCompatActivity {
                         if (rgbBytes == null) {
                             rgbBytes = new int[mPreviewSize.getWidth() * mPreviewSize.getHeight()];
                         }
-//                        ByteBuffer buffer = image.getPlanes()[0].getBuffer();
-//                        byte[] pixels = buffer.array();
-//                        Log.d("My App", "sum ="+ buffer.toString());
+
                         final Image.Plane[] planes = image.getPlanes();
                         yRowStride = planes[0].getRowStride();
                         final int uvRowStride = planes[1].getRowStride();
@@ -192,15 +194,9 @@ public class VideoActivity extends AppCompatActivity {
                             prediction = getPredictionFromTf();
 
                             Log.d("My App", "prediction ="+ prediction);
-//                        Log.d("My App", "new counts");
-//                        final int avgY = getAverageFromBuffer(image.getPlanes()[0].getBuffer());
-//                        Log.d("My App", "sum ="+ avgY);
-//
-//                        final int avgU = getAverageFromBuffer(image.getPlanes()[1].getBuffer());
-//                        Log.d("My App", "sum ="+ avgU);
-//
-//                        final int avgV = getAverageFromBuffer(image.getPlanes()[2].getBuffer());
-//                        Log.d("My App", "sum ="+ avgV);
+
+                            Log.d("My App", "height crop ="+ mHeightCropVal);
+                            Log.d("My App", "width crop ="+ mWidthCropVal);
 
 
                             runOnUiThread(new Runnable() {
@@ -274,6 +270,45 @@ public class VideoActivity extends AppCompatActivity {
         mImageView = (ImageView) findViewById(R.id.imageView);
         mPredictionTextView = (TextView) findViewById(R.id.textViewPrediction);
         mSumTextView = (TextView) findViewById(R.id.textViewSum);
+
+        mSeekBarWidth = (SeekBar) findViewById(R.id.seekBarWidth);
+        mSeekBarWidth.setOnSeekBarChangeListener(
+                new SeekBar.OnSeekBarChangeListener() {
+
+                    @Override
+                    public void onProgressChanged(SeekBar seekBar,
+                                                  int progressValue, boolean fromUser) {
+
+                       mWidthCropVal = progressValue;
+                    }
+
+                    @Override
+                    public void onStartTrackingTouch(SeekBar seekBar) {}
+
+                    @Override
+                    public void onStopTrackingTouch(SeekBar seekBar) {}
+                });
+
+
+        mSeekBarHeight = (SeekBar) findViewById(R.id.seekBarHeight);
+        mSeekBarHeight.setOnSeekBarChangeListener(
+                new SeekBar.OnSeekBarChangeListener() {
+
+                    @Override
+                    public void onProgressChanged(SeekBar seekBar,
+                                                  int progressValue, boolean fromUser) {
+
+                        mHeightCropVal = progressValue;
+                    }
+
+                    @Override
+                    public void onStartTrackingTouch(SeekBar seekBar) {}
+
+                    @Override
+                    public void onStopTrackingTouch(SeekBar seekBar) {}
+                });
+
+
     }
 
     @Override
