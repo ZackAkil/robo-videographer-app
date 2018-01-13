@@ -17,6 +17,8 @@ import java.util.UUID;
  * Created by zackakil on 13/01/2018.
  */
 
+
+//"HC-06"
 public class BluetoothTripod {
 
     private static final UUID BTMODULEUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"); // "random" unique identifier
@@ -71,12 +73,12 @@ public class BluetoothTripod {
         return  device.createRfcommSocketToServiceRecord(BTMODULEUUID);
     }
 
-    private void sendDownBluetooth(char bytes){
+    public void sendDownBluetooth(char bytes){
 
         sendDownBluetooth( String.valueOf(bytes).getBytes() );
     }
 
-    private void sendDownBluetooth(byte[] bytes){
+    public void sendDownBluetooth(byte[] bytes){
 
         if (this.soc.isConnected()){
 
@@ -93,6 +95,15 @@ public class BluetoothTripod {
             Log.e("My App", "Not connected");
         }
 
+    }
+
+    public void close(){
+        try{
+            this.soc.close();
+
+        } catch (IOException e) {
+            Log.e("My App", "Socket creation failed", e);
+        }
     }
 
 }
