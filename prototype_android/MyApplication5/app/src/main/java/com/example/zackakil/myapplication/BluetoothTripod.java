@@ -97,6 +97,14 @@ public class BluetoothTripod {
 
     }
 
+    /**
+     * @param pred prediction from 0 to 1 of where to point the camera.
+     */
+    public void feedPrediction(float pred){
+        int scaledValue =  Math.min( Math.max( (int)( pred * 100.f), 0), 100);
+        this.sendDownBluetooth((char)scaledValue);
+    }
+
     public void close(){
         try{
             this.soc.close();

@@ -27,6 +27,7 @@ public class BigTextView extends AppCompatActivity {
     protected void onStop() {
         // call the superclass method first
         super.onStop();
+        mBluetoothTripod.close();
 
     }
 

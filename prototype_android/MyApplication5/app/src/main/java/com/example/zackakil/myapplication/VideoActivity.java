@@ -147,6 +147,10 @@ public class VideoActivity extends AppCompatActivity {
 
     private Switch mCropViewSwitch;
 
+
+    private BluetoothTripod mBluetoothTripod;
+
+
     private TfPredictor predictor;
     private ImagePreProcessor imagePreProcessor;
 
@@ -201,7 +205,7 @@ public class VideoActivity extends AppCompatActivity {
                             Log.d("My App", "height crop ="+ mHeightCropVal);
                             Log.d("My App", "width crop ="+ mWidthCropVal);
 
-
+                            mBluetoothTripod.feedPrediction(prediction);
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -313,6 +317,8 @@ public class VideoActivity extends AppCompatActivity {
 
         mCropViewSwitch = (Switch) findViewById(R.id.switchCropView);
 
+        mBluetoothTripod = new BluetoothTripod("HC-06");
+
     }
 
     @Override
@@ -320,6 +326,8 @@ public class VideoActivity extends AppCompatActivity {
         closeCamera();
 
         closeBackgroundThread();
+
+        mBluetoothTripod.close();
 
         super.onPause();
     }
