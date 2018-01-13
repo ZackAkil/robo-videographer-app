@@ -23,7 +23,7 @@ Version 2 of rugby recording robot built into a mobile app with better machine l
 - [ ] *Control arduino with output from tensorflow model
 - [ ] *Optimise TF model
 - [ ] *Find a way to use the optimised for inference model on android
-- [ ] *Adjustable crop
+- [x] *Adjustable crop
 
 *MVP
 
