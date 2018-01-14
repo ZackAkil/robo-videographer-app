@@ -15,7 +15,7 @@ Servo myservo;  // create servo object to control a servo
 void setup()
 {
   Serial.begin(9600); //set baud rate
-  myservo.attach(9);  // attaches the servo on pin 9 to the servo object
+  myservo.attach(3);  // attaches the servo on pin 9 to the servo object
 }
 
 int pos = 0;
