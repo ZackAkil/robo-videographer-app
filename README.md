@@ -26,6 +26,8 @@ Version 2 of rugby recording robot built into a mobile app with better machine l
 - [x] *Adjustable crop
 - [ ] FPS tracker
 - [ ] Refactor into threads
+- [ ] Add recurent layer
+- [ ] Prevent from sleeping
 
 *MVP
 
@@ -176,3 +178,7 @@ Read/write files
 ---
 Crop bitmap image
 - https://stackoverflow.com/questions/3846338/how-to-crop-an-image-in-android
+
+---
+Prvent from sleeping 
+- https://developer.android.com/reference/android/view/View.html#setKeepScreenOn%28boolean%29
