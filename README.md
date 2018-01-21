@@ -180,5 +180,5 @@ Crop bitmap image
 - https://stackoverflow.com/questions/3846338/how-to-crop-an-image-in-android
 
 ---
-Prvent from sleeping 
+Prevent from sleeping 
 - https://developer.android.com/reference/android/view/View.html#setKeepScreenOn%28boolean%29
