@@ -319,6 +319,9 @@ public class VideoActivity extends AppCompatActivity {
 
         mBluetoothTripod = new BluetoothTripod("HC-06");
 
+        mImageView.setKeepScreenOn(true);
+
+
     }
 
     @Override
