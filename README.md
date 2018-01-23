@@ -182,3 +182,7 @@ Crop bitmap image
 ---
 Prevent from sleeping 
 - https://developer.android.com/reference/android/view/View.html#setKeepScreenOn%28boolean%29
+
+---
+Keras stateful lstm
+- https://github.com/keras-team/keras/blob/master/examples/lstm_stateful.py
