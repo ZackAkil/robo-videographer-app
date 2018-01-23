@@ -187,3 +187,4 @@ Prevent from sleeping
 Keras stateful lstm
 - https://github.com/keras-team/keras/blob/master/examples/lstm_stateful.py
 - https://github.com/keras-team/keras/issues/4208
+- https://github.com/keras-team/keras/issues/2045
