@@ -27,7 +27,7 @@ Version 2 of rugby recording robot built into a mobile app with better machine l
 - [ ] FPS tracker
 - [ ] Refactor into threads
 - [ ] *Add recurent layer
-- [ ] *Prevent from sleeping
+- [x] *Prevent from sleeping
 
 *MVP
 
