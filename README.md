@@ -21,12 +21,12 @@ Version 2 of rugby recording robot built into a mobile app with better machine l
 - [ ] Modualirse code on android app 
 - [ ] Save data (recordings)
 - [x] *Control arduino with output from tensorflow model
-- [ ] *Optimise TF model
-- [ ] *Find a way to use the optimised for inference model on android
+- [x] *Optimise TF model
+- [x] *Find a way to use the optimised for inference model on android
 - [x] *Adjustable crop
 - [ ] FPS tracker
 - [ ] Refactor into threads
-- [ ] *Add recurent layer
+- [x] *Add recurent layer
 - [x] *Prevent from sleeping
 
 *MVP
