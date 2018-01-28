@@ -146,6 +146,9 @@ public class VideoActivity extends AppCompatActivity {
     private int mWidthCropVal;
     private int mHeightCropVal;
 
+    private long lastEpoch = 0;
+    private int delay = 300;
+
     private float[] oldFramePixels;
 
     private Switch mCropViewSwitch;
@@ -201,7 +204,12 @@ public class VideoActivity extends AppCompatActivity {
 
 
                             float prediction = 0;
-                            prediction = getPredictionFromTf();
+
+
+                            if (System.currentTimeMillis() > + (lastEpoch + delay) ){
+                                lastEpoch = System.currentTimeMillis();
+                                prediction = getPredictionFromTf();
+                            }
 
                             Log.d("My App", "prediction ="+ prediction);
 
