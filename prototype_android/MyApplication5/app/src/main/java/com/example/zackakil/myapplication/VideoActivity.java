@@ -137,6 +137,7 @@ public class VideoActivity extends AppCompatActivity {
     private TextView mSumTextView;
 
     private Bitmap syntheticImage = null;
+    private Bitmap syntheticImage2 = null;
     private boolean useSyntheticImage = false;
     private int syntheticImageToUse = 0;
 
@@ -353,7 +354,7 @@ public class VideoActivity extends AppCompatActivity {
 
 
     private float[] getSyntheticPixels(){
-        final int[] pixels = new int[80*640];
+
         final Bitmap synthBitmap = syntheticImage;
 
         runOnUiThread(new Runnable() {
@@ -363,14 +364,36 @@ public class VideoActivity extends AppCompatActivity {
             }
         });
 
-        final float[] synthFloatPixels = new float[80*640];
 
-        synthBitmap.getPixels (pixels, 0, synthBitmap.getWidth(), 0, 0, 640, 80);
+        final float[] synthFloatPixels_1 = bitmapToPixels(syntheticImage, 50, 16);
 
-        for(int i = 0; i<80*640; i++){
+        final float[] synthFloatPixels_2 = bitmapToPixels(syntheticImage2, 50, 16);
+
+        float[] c = new float[synthFloatPixels_1.length + synthFloatPixels_2.length];
+        System.arraycopy(synthFloatPixels_1, 0, c, 0, synthFloatPixels_1.length);
+        System.arraycopy(synthFloatPixels_2, 0, c, synthFloatPixels_1.length, synthFloatPixels_2.length);
+
+
+
+        return c;
+    }
+
+    private float[] bitmapToPixels(Bitmap frame, int width, int height){
+
+        int size = width * height;
+
+        final int[] pixels = new int[size];
+
+        final float[] synthFloatPixels = new float[size];
+
+        frame.getPixels (pixels, 0, frame.getWidth(), 0, 0, width, height);
+
+        for(int i = 0; i<size; i++){
             synthFloatPixels[i] =  ((float) Color.red(pixels[i])) / 255.f ;
         }
+
         return synthFloatPixels;
+
     }
 
 
@@ -385,6 +408,8 @@ public class VideoActivity extends AppCompatActivity {
             floatPixels = imagePreProcessor.getLatestDeltaFrame();
         }else{
             floatPixels = getSyntheticPixels();
+
+
         }
 
 
@@ -418,10 +443,14 @@ public class VideoActivity extends AppCompatActivity {
 
             if (oldFramePixels != null) {
 
-
-                float[] c = new float[oldFramePixels.length + floatPixels.length];
-                System.arraycopy(oldFramePixels, 0, c, 0, oldFramePixels.length);
-                System.arraycopy(floatPixels, 0, c, oldFramePixels.length, floatPixels.length);
+                float[] c;
+                if (! useSyntheticImage) {
+                    c = new float[oldFramePixels.length + floatPixels.length];
+                    System.arraycopy(oldFramePixels, 0, c, 0, oldFramePixels.length);
+                    System.arraycopy(floatPixels, 0, c, oldFramePixels.length, floatPixels.length);
+                }else{
+                    c = floatPixels;
+                }
 
 
                 float prediction = predictor.predict(c);
@@ -457,8 +486,11 @@ public class VideoActivity extends AppCompatActivity {
 
 //        set image to next bitmap from assets
         try {
-            InputStream open = getAssets().open(syntheticImageToUse+".png");
+            InputStream open = getAssets().open(syntheticImageToUse+"_0.png");
             syntheticImage = BitmapFactory.decodeStream(open);
+
+            open = getAssets().open(syntheticImageToUse+"_1.png");
+            syntheticImage2 = BitmapFactory.decodeStream(open);
         }catch(IOException e){
             Toast.makeText(getBaseContext(), "Loading image error", Toast.LENGTH_SHORT).show();
             Log.d("My App", "NO IMAGE "+syntheticImageToUse);
