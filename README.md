@@ -27,7 +27,7 @@ Version 2 of rugby recording robot built into a mobile app with better machine l
 - [ ] FPS tracker
 - [ ] Refactor into threads
 - [ ] *Add recurent layer
-- [ ] *Prevent from sleeping
+- [x] *Prevent from sleeping
 
 *MVP
 
@@ -182,3 +182,9 @@ Crop bitmap image
 ---
 Prevent from sleeping 
 - https://developer.android.com/reference/android/view/View.html#setKeepScreenOn%28boolean%29
+
+---
+Keras stateful lstm
+- https://github.com/keras-team/keras/blob/master/examples/lstm_stateful.py
+- https://github.com/keras-team/keras/issues/4208
+- https://github.com/keras-team/keras/issues/2045
