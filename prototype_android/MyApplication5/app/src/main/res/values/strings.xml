@@ -4,5 +4,5 @@
     <string name="button_send">Send</string>
     <string name="pref_key">test pref</string>
     <string name="big_btn_text">Send multi line</string>
-    <string name="cnnModelName">frozen_cnn_delta_80_640_graph.pb</string>
+    <string name="cnnModelName">model.pb</string>
 </resources>

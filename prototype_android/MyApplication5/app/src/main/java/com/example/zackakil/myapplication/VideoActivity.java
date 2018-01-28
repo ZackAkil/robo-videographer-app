@@ -145,6 +145,8 @@ public class VideoActivity extends AppCompatActivity {
     private int mWidthCropVal;
     private int mHeightCropVal;
 
+    private float[] oldFramePixels;
+
     private Switch mCropViewSwitch;
 
 
@@ -259,13 +261,13 @@ public class VideoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        imagePreProcessor = new ImagePreProcessor(640, 80);
+        imagePreProcessor = new ImagePreProcessor(50, 16);
 
         predictor = new TfPredictor(getString(R.string.cnnModelName),
                                     getAssets(),
                                     "input_input",
                                     "output/BiasAdd",
-                                    new int[]{80, 640,1});
+                                    new int[]{2, 16, 50, 1});
 
         setContentView(R.layout.activity_video);
         nTextureView = (TextureView) findViewById(R.id.textureView);
@@ -414,23 +416,34 @@ public class VideoActivity extends AppCompatActivity {
 
             }
 
+            if (oldFramePixels != null) {
 
 
+                float[] c = new float[oldFramePixels.length + floatPixels.length];
+                System.arraycopy(oldFramePixels, 0, c, 0, oldFramePixels.length);
+                System.arraycopy(floatPixels, 0, c, oldFramePixels.length, floatPixels.length);
 
-            float prediction = predictor.predict(floatPixels);
 
-            mProgressBar.setProgress((int)( prediction *100));
+                float prediction = predictor.predict(c);
 
-            final String out = String.valueOf(prediction);
+                mProgressBar.setProgress((int) (prediction * 100));
 
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    mPredictionTextView.setText(out);
-                }
-            });
+                final String out = String.valueOf(prediction);
 
-            return prediction;
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mPredictionTextView.setText(out);
+                    }
+                });
+
+                return prediction;
+
+            }else{
+                oldFramePixels = floatPixels;
+                return 0;
+            }
+
         }else{
             return 0;
         }

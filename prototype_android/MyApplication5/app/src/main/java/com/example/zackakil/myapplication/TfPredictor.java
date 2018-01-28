@@ -14,7 +14,7 @@ public class TfPredictor {
     private String inputTensorName;
     private String[] outputTensorNames;
     private float[] predictOutput = new float[1];
-    private int[] inputDims = new int[3];
+    private int[] inputDims = new int[4];
 
     TfPredictor(String modelAssetName,
                 AssetManager assetManager,
@@ -37,7 +37,7 @@ public class TfPredictor {
 
     public float predict(float[] inputArray){
 
-        tfHelper.feed(this.inputTensorName, inputArray, 1, inputDims[0], inputDims[1],inputDims[2]);
+        tfHelper.feed(this.inputTensorName, inputArray, 1, inputDims[0], inputDims[1],inputDims[2], inputDims[3]);
 
         tfHelper.run(this.outputTensorNames);
 
