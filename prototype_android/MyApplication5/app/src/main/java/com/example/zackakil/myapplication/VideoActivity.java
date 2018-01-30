@@ -147,7 +147,7 @@ public class VideoActivity extends AppCompatActivity {
     private int mHeightCropVal;
 
     private long lastEpoch = 0;
-    private int delay = 300;
+    private int delay = 500;
 
     private float[] oldFramePixels;
 
