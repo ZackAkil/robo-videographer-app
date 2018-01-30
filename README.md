@@ -30,7 +30,17 @@ Version 2 of rugby recording robot built into a mobile app with better machine l
 - [x] *Add recurent layer
 - [x] *Prevent from sleeping
 
+- [ ] *Add smoothing into arduino
+- [ ] Add bluetooth connection fixer
+- [ ] *Add frame rate adjuster
+- [ ] refactore frame size to be easier to configure
+- [ ] Add camera pivot range setter
+
 *MVP
+
+
+
+
 
 ## Notes
 Use native android (work thorugh this https://developer.android.com/training/index.html)
