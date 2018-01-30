@@ -205,3 +205,4 @@ Keras stateful lstm
 ---
 Arduino smoothing servo
 - https://learn.adafruit.com/multi-tasking-the-arduino-part-1/overview
+- https://learn.adafruit.com/multi-tasking-the-arduino-part-1/all-together-now
