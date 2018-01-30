@@ -102,6 +102,7 @@ public class BluetoothTripod {
      */
     public void feedPrediction(float pred){
         int scaledValue =  Math.min( Math.max( (int)( pred * 100.f), 0), 100);
+        Log.e("My App", "send to bluetooth" + scaledValue);
         this.sendDownBluetooth((char)scaledValue);
     }
 

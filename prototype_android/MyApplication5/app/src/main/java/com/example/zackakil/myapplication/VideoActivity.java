@@ -152,7 +152,7 @@ public class VideoActivity extends AppCompatActivity {
     private float[] oldFramePixels;
 
     private Switch mCropViewSwitch;
-
+    private float prediction = 0;
 
     private BluetoothTripod mBluetoothTripod;
 
@@ -203,7 +203,7 @@ public class VideoActivity extends AppCompatActivity {
                             final int b = Color.blue(rgbFrameBitmap.getPixel(0, 0));
 
 
-                            float prediction = 0;
+
 
 
                             if (System.currentTimeMillis() > + (lastEpoch + delay) ){
@@ -411,7 +411,8 @@ public class VideoActivity extends AppCompatActivity {
         float[] floatPixels;
 
         if (! useSyntheticImage) {
-            imagePreProcessor.feedFrame(rotateImage(rgbFrameBitmap, 90), mWidthCropVal, mHeightCropVal);
+//            imagePreProcessor.feedFrame(rotateImage(rgbFrameBitmap, 90), mWidthCropVal, mHeightCropVal);
+            imagePreProcessor.feedFrame(rgbFrameBitmap, mWidthCropVal, mHeightCropVal);
 
             floatPixels = imagePreProcessor.getLatestDeltaFrame();
         }else{
@@ -550,6 +551,7 @@ public class VideoActivity extends AppCompatActivity {
 
         CameraManager cm = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
         try {
+
             cm.openCamera(mCameraId, mCameraDeviceStateCallback, mHandler);
 
         }catch(SecurityException ex){
@@ -563,6 +565,7 @@ public class VideoActivity extends AppCompatActivity {
     }
 
     private void closeCamera(){
+
 
         if (mCameraCaptureSession != null){
             mCameraCaptureSession.close();

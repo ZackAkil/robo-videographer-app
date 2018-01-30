@@ -36,6 +36,7 @@
         <activity
             android:name=".VideoActivity"
             android:label="Video"
+            android:screenOrientation="landscape"
             android:parentActivityName=".MainActivity"/>
         <activity
             android:label="List"
