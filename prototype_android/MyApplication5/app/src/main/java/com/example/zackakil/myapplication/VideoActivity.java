@@ -155,6 +155,7 @@ public class VideoActivity extends AppCompatActivity {
     private float prediction = 0;
 
     private BluetoothTripod mBluetoothTripod;
+    private SignalFeedDampener mSignalDampener;
 
 
     private TfPredictor predictor;
@@ -332,6 +333,8 @@ public class VideoActivity extends AppCompatActivity {
 
         mImageView.setKeepScreenOn(true);
 
+        mSignalDampener = new SignalFeedDampener();
+
 
     }
 
@@ -462,7 +465,7 @@ public class VideoActivity extends AppCompatActivity {
                 }
 
 
-                float prediction = predictor.predict(c);
+                float prediction = (float) mSignalDampener.getNextVal( predictor.predict(c));
 
                 mProgressBar.setProgress((int) (prediction * 100));
 
