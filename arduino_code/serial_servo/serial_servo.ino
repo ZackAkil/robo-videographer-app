@@ -4,7 +4,7 @@
  * 
  * Servo connected to pin 9 
  */
-
+ 
 
 #include <Servo.h>
 
@@ -22,20 +22,33 @@ void setup()
 }
 
 int pos = 0;
+int targetPos = 0;
+
+// reduce this value to speed up movment
+int  updateInterval = 23; 
+unsigned long lastUpdate = 0;
 
 void loop()
 {
-  while(Serial.available())
-  {//while there is data available on the serial monitor
-//    message+=char(Serial.read());//store string from serial command
-    pos = char(Serial.read());
+  if(Serial.available())
+  {
+    targetPos = char(Serial.read());
+    // use delays to give the serial time to catch up   
+    delay(5); 
     Serial.read();
-    myservo.write(pos); 
-    
+    delay(5); 
   }
 
+  if((millis() - lastUpdate) > updateInterval){
+    lastUpdate = millis();
+    if (targetPos <  pos){
+      pos --;
+    }else if (targetPos >  pos){
+      pos++;
+    }
+    myservo.write(pos); 
+  }
 
-  delay(100); //delay
 }
     
 
