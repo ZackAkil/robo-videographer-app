@@ -32,7 +32,7 @@ Version 2 of rugby recording robot built into a mobile app with better machine l
 
 ---
 
-- [ ] *Add smoothing into arduino
+- [x] *Add smoothing into arduino
 - [ ] Add bluetooth connection fixer
 - [ ] *Add frame rate adjuster
 - [ ] refactore frame size to be easier to configure
