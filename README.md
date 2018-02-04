@@ -210,3 +210,9 @@ Arduino smoothing servo
 ---
 Android spinner (drop down) for FPS selector
 - https://developer.android.com/guide/topics/ui/controls/spinner.html
+
+---
+Optimising model for inference 
+```bash
+python keras_to_tensorflow.py -input_model_file rcnn.h5 -output_model_file model.pb
+```
