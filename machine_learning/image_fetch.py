@@ -53,7 +53,7 @@ class Image_Fetcher():
                     print('current image is none')
             else:
                 
-                if not(count % 100):
+                if not(count % 300):
                     print(count)
                     
                 current_image = misc.imread(self.image_path + image_file_name, flatten=True)
