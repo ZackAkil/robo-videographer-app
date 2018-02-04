@@ -32,7 +32,7 @@ Version 2 of rugby recording robot built into a mobile app with better machine l
 
 ---
 
-- [ ] *Add smoothing into arduino
+- [x] *Add smoothing into arduino
 - [ ] Add bluetooth connection fixer
 - [ ] *Add frame rate adjuster
 - [ ] refactore frame size to be easier to configure
@@ -206,3 +206,7 @@ Keras stateful lstm
 Arduino smoothing servo
 - https://learn.adafruit.com/multi-tasking-the-arduino-part-1/overview
 - https://learn.adafruit.com/multi-tasking-the-arduino-part-1/all-together-now
+
+---
+Android spinner (drop down) for FPS selector
+- https://developer.android.com/guide/topics/ui/controls/spinner.html
