@@ -98,8 +98,8 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="364dp"
-        android:layout_height="58dp"
+        android:layout_width="255dp"
+        android:layout_height="49dp"
         android:layout_marginBottom="4dp"
         android:layout_marginLeft="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -194,11 +194,23 @@
 
     <Spinner
         android:id="@+id/spinnerFPS"
-        android:layout_width="109dp"
-        android:layout_height="29dp"
+        android:layout_width="156dp"
+        android:layout_height="31dp"
         android:layout_marginBottom="32dp"
-        android:layout_marginEnd="48dp"
+        android:layout_marginEnd="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
+
+    <EditText
+        android:id="@+id/editTextSignalDampen"
+        android:layout_width="63dp"
+        android:layout_height="41dp"
+        android:layout_marginEnd="4dp"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:text="0.15"
+        app:layout_constraintBottom_toBottomOf="@+id/spinnerFPS"
+        app:layout_constraintEnd_toStartOf="@+id/spinnerFPS"
+        tools:text="0.15"/>
 
 </android.support.constraint.ConstraintLayout>

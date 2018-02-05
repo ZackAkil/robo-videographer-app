@@ -26,4 +26,15 @@ public class SignalFeedDampener {
         previousValue = nextValue;
         return nextValue;
     }
+
+    public double getNextVal(float feedValue, float dampenConstant){
+
+        residual = feedValue - previousValue;
+        weight = Math.pow(2, -Math.abs(residual/dampenConstant));
+        addition = weight * residual;
+        nextValue = previousValue + addition;
+
+        previousValue = nextValue;
+        return nextValue;
+    }
 }

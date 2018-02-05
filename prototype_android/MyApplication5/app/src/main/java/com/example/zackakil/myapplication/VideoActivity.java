@@ -33,6 +33,7 @@ import android.view.TextureView;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
@@ -163,6 +164,8 @@ public class VideoActivity extends AppCompatActivity {
     private SignalScaler mSignalScaler;
 
     private Spinner fpsSelector;
+
+    private EditText mEditTextSignalDamp;
 
 
     private TfPredictor predictor;
@@ -344,6 +347,8 @@ public class VideoActivity extends AppCompatActivity {
 
         mSignalScaler = new SignalScaler(VideoActivity.this);
 
+        mEditTextSignalDamp = (EditText) findViewById(R.id.editTextSignalDampen);
+
 
 
         Spinner spinner = (Spinner) findViewById(R.id.spinnerFPS);
@@ -499,7 +504,7 @@ public class VideoActivity extends AppCompatActivity {
                 }
 
 
-                float prediction = (float) mSignalDampener.getNextVal( predictor.predict(c));
+                float prediction = (float) mSignalDampener.getNextVal( predictor.predict(c), Float.parseFloat( mEditTextSignalDamp.getText().toString()));
 
                 mProgressBar.setProgress((int) (prediction * 100));
 
