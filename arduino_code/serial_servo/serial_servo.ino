@@ -21,8 +21,8 @@ void setup()
   myservo.attach(3);  // attaches the servo on pin 9 to the servo object
 }
 
-int pos = 0;
-int targetPos = 0;
+int pos = 50;
+int targetPos = 50;
 
 // reduce this value to speed up movment
 int  updateInterval = 23; 
@@ -37,9 +37,11 @@ void loop()
     delay(5); 
     Serial.read();
     delay(5); 
+    
   }
 
   if((millis() - lastUpdate) > updateInterval){
+    updateInterval = cacluateUpdateInterval(pos, targetPos);
     lastUpdate = millis();
     if (targetPos <  pos){
       pos --;
@@ -49,6 +51,16 @@ void loop()
     myservo.write(pos); 
   }
 
+  
+  
+
+}
+
+int cacluateUpdateInterval(int start, int target){
+  int delta = abs(start-target);
+  int y =  max( -(delta) +80, 0);
+  return y;
+  
 }
     
 
