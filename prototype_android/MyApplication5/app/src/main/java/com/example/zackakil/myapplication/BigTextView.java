@@ -25,12 +25,22 @@ public class BigTextView extends AppCompatActivity {
     private BluetoothTripod mBluetoothTripod;
     private SharedPreferences sharedPrefs;
 
+    private int minPos;
+    private int maxPos;
+    private int latestPos;
+
     @Override
     protected void onStop() {
         // call the superclass method first
         super.onStop();
         mBluetoothTripod.close();
 
+    }
+
+    private void sendPos(){
+
+        int val = scalePosValue(latestPos/100.0f);
+        sendDownBluetooth((char) val);
     }
 
     @Override
@@ -52,7 +62,8 @@ public class BigTextView extends AppCompatActivity {
                     public void onProgressChanged(SeekBar seekBar,
                                                   int progresValue, boolean fromUser) {
 
-                        sendDownBluetooth((char) progresValue);
+                        latestPos = progresValue;
+                        sendPos();
                     }
 
                     @Override
@@ -67,6 +78,7 @@ public class BigTextView extends AppCompatActivity {
 
         int pos_r = sharedPrefs.getInt( getString(R.string.right_boundary_key), 100);
         seekBarRight.setProgress(pos_r);
+        maxPos = pos_r;
 
         seekBarRight.setOnSeekBarChangeListener(
                 new SeekBar.OnSeekBarChangeListener() {
@@ -75,7 +87,8 @@ public class BigTextView extends AppCompatActivity {
                     public void onProgressChanged(SeekBar seekBar,
                                                   int progresValue, boolean fromUser) {
 
-
+                        maxPos = progresValue;
+                        sendPos();
                         SharedPreferences.Editor editor = sharedPrefs.edit();
 
                         editor.putInt(getString(R.string.right_boundary_key), progresValue);
@@ -96,7 +109,7 @@ public class BigTextView extends AppCompatActivity {
 
         int pos_l = sharedPrefs.getInt( getString(R.string.left_boundary_key), 0);
         seekBarLeft.setProgress(pos_l);
-
+        minPos = pos_l;
 
         seekBarLeft.setOnSeekBarChangeListener(
                 new SeekBar.OnSeekBarChangeListener() {
@@ -106,7 +119,8 @@ public class BigTextView extends AppCompatActivity {
                                                   int progresValue, boolean fromUser) {
 
 
-
+                        minPos = progresValue;
+                        sendPos();
                         SharedPreferences.Editor editor = sharedPrefs.edit();
 
                         editor.putInt(getString(R.string.left_boundary_key), progresValue);
@@ -122,6 +136,16 @@ public class BigTextView extends AppCompatActivity {
 
 
         mBluetoothTripod = new BluetoothTripod("HC-06");
+
+    }
+
+
+    private int scalePosValue(float val){
+
+        int delta = maxPos - minPos;
+        int out = (int)(delta * val) + minPos;
+        return out;
+
 
     }
 

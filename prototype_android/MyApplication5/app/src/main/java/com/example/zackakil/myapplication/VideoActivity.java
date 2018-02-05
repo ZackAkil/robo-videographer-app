@@ -160,6 +160,8 @@ public class VideoActivity extends AppCompatActivity {
     private BluetoothTripod mBluetoothTripod;
     private SignalFeedDampener mSignalDampener;
 
+    private SignalScaler mSignalScaler;
+
     private Spinner fpsSelector;
 
 
@@ -222,7 +224,7 @@ public class VideoActivity extends AppCompatActivity {
                             Log.d("My App", "height crop ="+ mHeightCropVal);
                             Log.d("My App", "width crop ="+ mWidthCropVal);
 
-                            mBluetoothTripod.feedPrediction(prediction);
+                            mBluetoothTripod.feedPrediction( mSignalScaler.scaleVal(prediction) );
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -339,6 +341,10 @@ public class VideoActivity extends AppCompatActivity {
         mImageView.setKeepScreenOn(true);
 
         mSignalDampener = new SignalFeedDampener();
+
+        mSignalScaler = new SignalScaler(VideoActivity.this);
+
+
 
         Spinner spinner = (Spinner) findViewById(R.id.spinnerFPS);
 // Create an ArrayAdapter using the string array and a default spinner layout
