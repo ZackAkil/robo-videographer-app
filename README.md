@@ -33,10 +33,10 @@ Version 2 of rugby recording robot built into a mobile app with better machine l
 ---
 
 - [x] *Add smoothing into arduino
-- [ ] Add bluetooth connection fixer
+- [x] ~Add bluetooth connection fixer~ figure out why bluetooth drops (was limited power)
 - [x] *Add frame rate adjuster
 - [ ] refactore frame size to be easier to configure
-- [ ] Add camera pivot range setter
+- [x] Add camera pivot range setter
 
 *MVP
 
