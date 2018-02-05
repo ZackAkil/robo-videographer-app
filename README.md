@@ -25,7 +25,7 @@ Version 2 of rugby recording robot built into a mobile app with better machine l
 - [x] *Find a way to use the optimised for inference model on android
 - [x] *Adjustable crop
 - [x] FPS limiter
-- [ ] FPS tracker
+- [x] FPS tracker
 - [ ] Refactor into threads
 - [x] *Add recurent layer
 - [x] *Prevent from sleeping
@@ -34,7 +34,7 @@ Version 2 of rugby recording robot built into a mobile app with better machine l
 
 - [x] *Add smoothing into arduino
 - [ ] Add bluetooth connection fixer
-- [ ] *Add frame rate adjuster
+- [x] *Add frame rate adjuster
 - [ ] refactore frame size to be easier to configure
 - [ ] Add camera pivot range setter
 
