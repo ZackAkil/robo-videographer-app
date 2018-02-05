@@ -15,6 +15,8 @@
     <string name="edit_message">Enter a message</string>
     <string name="button_send">Send</string>
     <string name="pref_key">test pref</string>
+    <string name="right_boundary_key">right key</string>
+    <string name="left_boundary_key">left key</string>
     <string name="big_btn_text">Send multi line</string>
     <string name="cnnModelName">model_v2.pb</string>
 </resources>

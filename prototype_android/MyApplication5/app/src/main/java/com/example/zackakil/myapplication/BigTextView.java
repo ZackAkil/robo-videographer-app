@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,6 +23,7 @@ import java.util.UUID;
 public class BigTextView extends AppCompatActivity {
 
     private BluetoothTripod mBluetoothTripod;
+    private SharedPreferences sharedPrefs;
 
     @Override
     protected void onStop() {
@@ -35,6 +37,11 @@ public class BigTextView extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_big_text_view);
+
+
+         sharedPrefs =  BigTextView.this.getSharedPreferences(
+                "my apps prefs", Context.MODE_PRIVATE
+        );
 
 
         SeekBar seekBar = (SeekBar) findViewById(R.id.seekBar);
@@ -54,6 +61,65 @@ public class BigTextView extends AppCompatActivity {
                     @Override
                     public void onStopTrackingTouch(SeekBar seekBar) {}
                 });
+
+
+        SeekBar seekBarRight = (SeekBar) findViewById(R.id.seekBarRight);
+
+        int pos_r = sharedPrefs.getInt( getString(R.string.right_boundary_key), 100);
+        seekBarRight.setProgress(pos_r);
+
+        seekBarRight.setOnSeekBarChangeListener(
+                new SeekBar.OnSeekBarChangeListener() {
+
+                    @Override
+                    public void onProgressChanged(SeekBar seekBar,
+                                                  int progresValue, boolean fromUser) {
+
+
+                        SharedPreferences.Editor editor = sharedPrefs.edit();
+
+                        editor.putInt(getString(R.string.right_boundary_key), progresValue);
+                        editor.commit();
+
+                    }
+
+                    @Override
+                    public void onStartTrackingTouch(SeekBar seekBar) {}
+
+                    @Override
+                    public void onStopTrackingTouch(SeekBar seekBar) {}
+                });
+
+
+        SeekBar seekBarLeft = (SeekBar) findViewById(R.id.seekBarLeft);
+
+
+        int pos_l = sharedPrefs.getInt( getString(R.string.left_boundary_key), 0);
+        seekBarLeft.setProgress(pos_l);
+
+
+        seekBarLeft.setOnSeekBarChangeListener(
+                new SeekBar.OnSeekBarChangeListener() {
+
+                    @Override
+                    public void onProgressChanged(SeekBar seekBar,
+                                                  int progresValue, boolean fromUser) {
+
+
+
+                        SharedPreferences.Editor editor = sharedPrefs.edit();
+
+                        editor.putInt(getString(R.string.left_boundary_key), progresValue);
+                        editor.commit();
+                    }
+
+                    @Override
+                    public void onStartTrackingTouch(SeekBar seekBar) {}
+
+                    @Override
+                    public void onStopTrackingTouch(SeekBar seekBar) {}
+                });
+
 
         mBluetoothTripod = new BluetoothTripod("HC-06");
 
