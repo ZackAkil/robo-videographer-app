@@ -504,9 +504,9 @@ public class VideoActivity extends AppCompatActivity {
                 }
 
 
-                float prediction = (float) mSignalDampener.getNextVal( predictor.predict(c), Float.parseFloat( mEditTextSignalDamp.getText().toString()));
+                float prediction = 1 - (float) mSignalDampener.getNextVal( predictor.predict(c), Float.parseFloat( mEditTextSignalDamp.getText().toString()));
 
-                mProgressBar.setProgress((int) (prediction * 100));
+                mProgressBar.setProgress(100 - (int) (prediction * 100));
 
                 final String out = String.valueOf(prediction);
 
