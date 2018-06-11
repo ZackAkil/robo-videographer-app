@@ -1,3 +1,7 @@
+# Todo
+- [ ] Build app to label video efficiently
+- [ ] Modifiy training code to use new labels
+
 # Robo videographer app
 Version 2 of rugby recording robot built into a mobile app with better machine learning.
 
