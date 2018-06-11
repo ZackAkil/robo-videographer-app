@@ -2,19 +2,16 @@ from tkinter import *
 import tkinter
 from PIL import Image, ImageTk
 from os import listdir
-from os.path import isfile, join
 import pandas as pd
-import image_label_nav
 import os.path
+import time
 
+import skvideo.io
+import skvideo.datasets
 
-LABEL_CSV = 'rugby_image_labels_5.csv'
+video_file_name = '../video/raw/VID_20180325_143338.mp4'
 
-if os.path.exists(LABEL_CSV):
-    ilc = image_label_nav.Image_Label_Cycler("/Users/zackakil/Desktop/capture clean", LABEL_CSV)
-else: 
-    ilc = image_label_nav.Image_Label_Cycler("/Users/zackakil/Desktop/capture clean")
-
+video_data = skvideo.io.vread(video_file_name)
 
 class Application(Frame):
     def say_hi(self):
@@ -41,6 +38,11 @@ class Application(Frame):
 
 def motion(event):
     x, y = event.x, event.y
+
+    global image_index
+    display_image(image_index)
+    image_index+=1
+
     w.delete("all")
     w.create_image(0, 0, anchor=tkinter.NW, image=current_photo)
     w.create_line(event.x, 0, event.x, 450,fill="red")
@@ -49,33 +51,40 @@ def motion(event):
     print('{}, {}'.format(x, y))
 
 def display_photo_label_line():
-    photo_line_pos = ilc.get_current_pos_value()
-    if photo_line_pos:
-        w.create_line(photo_line_pos, 0, photo_line_pos, 450,fill="blue")
+    pass
+    # photo_line_pos = ilc.get_current_pos_value()
+    # if photo_line_pos:
+    #     w.create_line(photo_line_pos, 0, photo_line_pos, 450,fill="blue")
 
+image_index = 0
 def callback(event):
-    ilc.set_current_pos_value(event.x)
-    display_photo_label_line()
-    ilc.next_photo()
-    display_image(ilc.current_image_name)
-    print ("clicked at", event.x, event.y)
-    ilc.save_labels(LABEL_CSV)
+    
+    pass
+
+
+
+    # ilc.set_current_pos_value(event.x)
+    # display_photo_label_line()
+    # ilc.next_photo()
+    # display_image(ilc.current_image_name)
+    # print ("clicked at", event.x, event.y)
+    # ilc.save_labels(LABEL_CSV)
 
 def callback2(event):
-    ilc.set_current_pos_value(None)
-    display_photo_label_line()
-    ilc.next_photo()
-    display_image(ilc.current_image_name)
-    print ("dump clicked at", event.x, event.y)
-    ilc.save_labels(LABEL_CSV)
+    pass
+    # ilc.set_current_pos_value(None)
+    # display_photo_label_line()
+    # ilc.next_photo()
+    # display_image(ilc.current_image_name)
+    # print ("dump clicked at", event.x, event.y)
+    # ilc.save_labels(LABEL_CSV)
 
-def display_image(file_name):
-    print('file to open', file_name)
-    image = Image.open(IMAGE_FOLDER_PATH + file_name)
-    photo = ImageTk.PhotoImage(image)
+def display_image(image_index):
+
+    photo = ImageTk.PhotoImage(Image.fromarray(video_data[image_index].astype('uint8'), 'RGB'))
+    print(type(photo))
     w.delete("all")
     w.create_image(0, 0, anchor=tkinter.NW, image=photo)
-    display_photo_label_line()
     global current_photo
     current_photo = photo
 
@@ -95,7 +104,7 @@ def key(event):
 
 
 root = Tk()
-IMAGE_FOLDER_PATH = "/Users/zackakil/Desktop/capture clean/"
+
 current_photo = None
 # mouse_line = None
 # photo_line = None
@@ -106,13 +115,13 @@ w.pack()
 w.bind('<Motion>', motion)
 w.bind("<Button-1>", callback)
 w.bind("<Button-2>", callback2)
-root.bind("<Key>", key)
+# root.bind("<Key>", key)
 
 
-display_image(ilc.current_image_name)
 
 
 
 app = Application(master=root)
 app.mainloop()
 root.destroy()
+
