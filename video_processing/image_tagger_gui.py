@@ -52,16 +52,16 @@ def motion(event):
     
 
 def next_image():
-    global image_index
+    global image_index, x, y, stop
 
-    global x, y
     display_image(image_index)
     image_index+=5
     w.delete("all")
     w.create_image(0, 0, anchor=tkinter.NW, image=current_photo)
     w.create_line(x, 0, x, 450,fill="red")
     w.create_line(0, y, 650, y,fill="red")
-    w.after(500, next_image)
+    if not stop:
+        w.after(500, next_image)
 
 def display_photo_label_line():
     pass
@@ -70,7 +70,9 @@ def display_photo_label_line():
     #     w.create_line(photo_line_pos, 0, photo_line_pos, 450,fill="blue")
 
 image_index = 0
-def callback(event):
+def play(event):
+    global stop 
+    stop = False
     next_image()
     
     pass
@@ -83,8 +85,10 @@ def callback(event):
     # display_image(ilc.current_image_name)
     # print ("clicked at", event.x, event.y)
     # ilc.save_labels(LABEL_CSV)
-
-def callback2(event):
+stop = False
+def pause(event):
+    global stop 
+    stop = True
     pass
     # ilc.set_current_pos_value(None)
     # display_photo_label_line()
@@ -127,8 +131,8 @@ w = Canvas(root, width=650, height=500)
 w.pack()
 
 w.bind('<Motion>', motion)
-w.bind("<Button-1>", callback)
-w.bind("<Button-2>", callback2)
+w.bind("<Button-1>", play)
+w.bind("<Button-2>", pause)
 # root.bind("<Key>", key)
 
 
