@@ -13,7 +13,7 @@ video_file_name = '../video/raw/VID_20180325_143338.mp4'
 video_data = skvideo.io.vread(video_file_name)
 
 print('video data ', video_data.shape)
-
+image_width, image_height = video_data.shape[1:3]
 x,y = 0,0
 image_index = 0
 stop = True
@@ -49,8 +49,8 @@ def next_image():
     image_index+=1
     w.delete("all")
     w.create_image(0, 0, anchor=tkinter.NW, image=current_photo)
-    w.create_line(x, 0, x, 450,fill="red")
-    w.create_line(0, y, 650, y,fill="red")
+    w.create_line(x, 0, x, image_width, fill="red")
+    w.create_line(0, y, image_height, y,fill="red")
     print(x,y)
 
     if image_index >= len(video_data):
@@ -80,12 +80,12 @@ def key(event):
 
     if event.char == '\uf703':
         print('right')
-        speed = max(speed-50, 10)
+        speed = max(speed-70, 10)
 
 
     elif event.char == '\uf702':
         print('left')
-        speed += 50
+        speed += 70
 
     elif event.char == '\uf701':
         print('down')
@@ -98,7 +98,7 @@ root = Tk()
 
 current_photo = None
 
-w = Canvas(root, width=1000, height=1000)
+w = Canvas(root, width=1000, height=1000, highlightthickness=0)
 w.pack()
 
 w.bind('<Motion>', motion)
