@@ -10,6 +10,7 @@ import skvideo.io
 import skvideo.datasets
 
 video_file_name = '../video/raw/VID_20180325_143338.mp4'
+save_to = 'VID_20180325_143338.csv'
 video_data = skvideo.io.vread(video_file_name)
 
 print('video data ', video_data.shape)
@@ -18,6 +19,8 @@ x,y = 0,0
 image_index = 0
 stop = True
 speed = 500
+xs = []
+ys = []
 
 class Application(Frame):
 
@@ -44,7 +47,14 @@ def motion(event):
 def save_x_y(x, y):
     x_ratio = min(1., x / float(image_width))
     y_ratio = min(1., y / float(image_height))
+    xs.append(x_ratio)
+    ys.append(y_ratio)
     print(x_ratio, y_ratio)
+
+def save_to_file():
+    df = pd.DataFrame(list(zip(xs, ys)), columns=['x','y'])
+    df.to_csv('test.csv')
+
 
 
 def next_image():
@@ -60,6 +70,8 @@ def next_image():
 
     if image_index >= len(video_data):
         print("finished data")
+        save_to_file()
+        print("saved data")
     elif not stop:
         w.after(speed, next_image)
 
