@@ -13,7 +13,7 @@ video_file_name = '../video/raw/VID_20180325_143338.mp4'
 video_data = skvideo.io.vread(video_file_name)
 
 print('video data ', video_data.shape)
-image_width, image_height = video_data.shape[1:3]
+image_height, image_width = video_data.shape[1:3]
 x,y = 0,0
 image_index = 0
 stop = True
@@ -41,6 +41,11 @@ def motion(event):
     global x, y
     x, y = event.x, event.y
 
+def save_x_y(x, y):
+    x_ratio = min(1., x / float(image_width))
+    y_ratio = min(1., y / float(image_height))
+    print(x_ratio, y_ratio)
+
 
 def next_image():
     global image_index, x, y, stop, speed
@@ -49,21 +54,21 @@ def next_image():
     image_index+=1
     w.delete("all")
     w.create_image(0, 0, anchor=tkinter.NW, image=current_photo)
-    w.create_line(x, 0, x, image_width, fill="red")
-    w.create_line(0, y, image_height, y,fill="red")
-    print(x,y)
+    w.create_line(x, 0, x, image_height, fill="red")
+    w.create_line(0, y, image_width, y,fill="red")
+    save_x_y(x, y)
 
     if image_index >= len(video_data):
         print("finished data")
     elif not stop:
         w.after(speed, next_image)
 
+
 def play(event):
     global stop 
     if stop:
         stop = False
         next_image()
-    
 
 
 def pause(event):
