@@ -36,19 +36,32 @@ class Application(Frame):
         self.pack()
         self.createWidgets()
 
+x,y = 0,0
+
 def motion(event):
+
+    global x, y
     x, y = event.x, event.y
+    # w.delete("all")
+    # w.create_image(0, 0, anchor=tkinter.NW, image=current_photo)
+    # w.create_line(event.x, 0, event.x, 450,fill="red")
+    # display_photo_label_line()
 
+    # print('{}, {}'.format(x, y))
+
+    
+
+def next_image():
     global image_index
-    display_image(image_index)
-    image_index+=1
 
+    global x, y
+    display_image(image_index)
+    image_index+=5
     w.delete("all")
     w.create_image(0, 0, anchor=tkinter.NW, image=current_photo)
-    w.create_line(event.x, 0, event.x, 450,fill="red")
-    display_photo_label_line()
-
-    print('{}, {}'.format(x, y))
+    w.create_line(x, 0, x, 450,fill="red")
+    w.create_line(0, y, 650, y,fill="red")
+    w.after(500, next_image)
 
 def display_photo_label_line():
     pass
@@ -58,6 +71,7 @@ def display_photo_label_line():
 
 image_index = 0
 def callback(event):
+    next_image()
     
     pass
 
