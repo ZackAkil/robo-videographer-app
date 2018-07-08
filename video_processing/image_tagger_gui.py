@@ -72,7 +72,7 @@ def save_x_y(x, y):
 
 def save_to_file():
     df = pd.DataFrame(list(zip(xs, ys)), columns=['x','y'])
-    df.to_csv('test.csv')
+    df.to_csv(save_to)
     print('labels saved to {}'.format(save_to))
 
 
