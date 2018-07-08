@@ -106,6 +106,7 @@ def play(event):
 def pause(event):
     global stop 
     stop = True
+    save_to_file()
 
 
 def display_image(image_index):
