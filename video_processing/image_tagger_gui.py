@@ -9,8 +9,27 @@ import time
 import skvideo.io
 import skvideo.datasets
 
-video_file_name = '../video/raw/VID_20180325_143338.mp4'
-save_to = 'VID_20180325_143338.csv'
+import argparse
+
+parser = argparse.ArgumentParser(description='App for labeling video for object tracking.')
+
+parser.add_argument("input", help="File name of video.")
+
+parser.add_argument("output", help="Folder name to store labels.")
+
+args = parser.parse_args()
+
+
+video_file_name = args.input
+
+video_name = video_file_name.split('/')[-1].split('.')[0]
+save_to = '{0}/{1}.csv'.format(args.output, video_name)  
+
+print('getting video: {}'.format(video_name))
+print('output folder: {}'.format(save_to))
+
+# exit()
+
 video_data = skvideo.io.vread(video_file_name)
 
 print('video data ', video_data.shape)
@@ -54,6 +73,7 @@ def save_x_y(x, y):
 def save_to_file():
     df = pd.DataFrame(list(zip(xs, ys)), columns=['x','y'])
     df.to_csv('test.csv')
+    print('labels saved to {}'.format(save_to))
 
 
 
