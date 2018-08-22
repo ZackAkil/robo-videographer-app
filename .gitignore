@@ -54,3 +54,4 @@ machine_learning/cnn_delta_80_640.h5
 misc/.ipynb_checkpoints/Dampend prediction volitility-checkpoint.ipynb
 
 video
+machine_learning/v2 (increase fps)/data/gray_compressed_data_VID_20180325_143338.mp4.npy
