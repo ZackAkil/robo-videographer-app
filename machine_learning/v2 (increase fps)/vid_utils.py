@@ -17,9 +17,12 @@ class Video_Utils:
         self.VIDEO_DIR = video_dir
         self.LABEL_DIR = label_dir
         self.vid_names = Video_Utils.get_possible_data(self.VIDEO_DIR, self.LABEL_DIR)
+    
+    @staticmethod
+    def get_transformed_data(video_dir, label_dir, **kwargs):
         
-    def get_transformed_data(self, **kwargs):
-        x,y = Video_Utils.load_all_data(self.vid_names)
+        vid_names = Video_Utils.get_possible_data(video_dir, label_dir)
+        x,y = Video_Utils.load_all_data(vid_names, video_dir, label_dir)
         trans_x = Video_Utils.transform_data(x, **kwargs)
         print('transformed video now sized {}gb'.format(Video_Utils.vid_in_gbs(trans_x)))
         return trans_x, y
@@ -44,10 +47,10 @@ class Video_Utils:
 
     
     @staticmethod
-    def load_data(vid_name):
+    def load_data(vid_name, video_dir, label_dir):
 
-        vid_file_name = VIDEO_DIR + '/' + vid_name
-        lab_file_name = LABEL_DIR + '/' + vid_name + '.csv'
+        vid_file_name = video_dir + '/' + vid_name
+        lab_file_name = label_dir + '/' + vid_name + '.csv'
 
         print('fetching ' + lab_file_name)
         lab_data = pd.read_csv(lab_file_name, sep=',').values[:,1:]
@@ -63,7 +66,7 @@ class Video_Utils:
         
         
     @staticmethod
-    def load_all_data(vid_names):
+    def load_all_data(vid_names, video_dir, label_dir):
 
         all_vids = None
         all_labs = None
@@ -71,7 +74,7 @@ class Video_Utils:
         for vid_name in vid_names:
 
             if all_vids is None:
-                all_vids, all_labs = Video_Utils.load_data(vid_name)
+                all_vids, all_labs = Video_Utils.load_data(vid_name, video_dir, label_dir)
             else:
                 t_v, t_l = Video_Utils.load_data(vid_name)
                 all_vids = np.concatenate(all_vids, t_v)
