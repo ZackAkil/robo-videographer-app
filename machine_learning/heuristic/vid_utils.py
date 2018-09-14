@@ -77,8 +77,8 @@ class Video_Utils:
                 all_vids, all_labs = Video_Utils.load_data(vid_name, video_dir, label_dir)
             else:
                 t_v, t_l = Video_Utils.load_data(vid_name, video_dir, label_dir)
-                all_vids = np.concatenate(all_vids, t_v)
-                all_labs = np.concatenate(all_labs, t_l)
+                all_vids = np.concatenate([all_vids, t_v])
+                all_labs = np.concatenate([all_labs, t_l])
                 del t_v, t_l
 
         assert(len(all_vids) == len(all_labs))
